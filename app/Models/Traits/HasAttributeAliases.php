@@ -6,10 +6,8 @@ trait HasAttributeAliases
 {
     /**
      * Map alias attribute names to real database column names.
-     *
-     * @var array<string, string>
+     * This should be defined in each model using this trait.
      */
-    protected array $attributeAliases = [];
 
     public function getAttribute($key)
     {
