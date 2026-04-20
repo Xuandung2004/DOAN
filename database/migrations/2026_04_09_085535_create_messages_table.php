@@ -10,13 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('tinnhan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
-            $table->text('message');
-            $table->tinyInteger('is_read')->default(0);
-            $table->timestamps();
+            $table->foreignId('nguoiguiID')->constrained('nguoidung')->cascadeOnDelete();
+            $table->foreignId('nguoinhanID')->constrained('nguoidung')->cascadeOnDelete();
+            $table->text('noidung');
+            $table->tinyInteger('dadoc')->default(0);
+            $table->timestamp('ngaytao')->useCurrent();
+            $table->timestamp('ngaycapnhat')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('tinnhan');
     }
 };

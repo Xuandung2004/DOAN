@@ -10,17 +10,18 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('donhang', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->decimal('total_price', 15, 2);
-            $table->text('shipping_address');
-            $table->string('payment_method'); // COD or VNPay
-            $table->tinyInteger('payment_status')->default(0)->comment('0 = pending, 1 = paid');
-            $table->tinyInteger('order_status')->default(0)->comment('0 = pending, 1 = shipping, 2 = done, 3 = cancelled');
-            $table->foreignId('coupon_id')->nullable()->constrained('coupons')->nullOnDelete();
-            $table->decimal('discount_amount', 15, 2)->default(0);
-            $table->timestamps();
+            $table->foreignId('nguoidungID')->constrained('nguoidung')->cascadeOnDelete();
+            $table->decimal('tongtien', 15, 2);
+            $table->text('diachigiaohang');
+            $table->string('phuongthucthanhtoan');
+            $table->tinyInteger('trangthaithanhtoan')->default(0)->comment('0 chờ, 1 đã thanh toán');
+            $table->tinyInteger('trangthaidon')->default(0)->comment('0 chờ, 1 đang giao, 2 hoàn tất, 3 hủy');
+            $table->foreignId('magiamgiaID')->nullable()->constrained('magiamgia')->nullOnDelete();
+            $table->decimal('sotiengiam', 15, 2)->default(0);
+            $table->timestamp('ngaytao')->useCurrent();
+            $table->timestamp('ngaycapnhat')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('donhang');
     }
 };

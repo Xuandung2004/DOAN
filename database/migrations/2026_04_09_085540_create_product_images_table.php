@@ -10,11 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('product_images', function (Blueprint $table) {
+        Schema::create('anhsanpham', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
-            $table->string('image_url');
-            $table->timestamps();
+            $table->foreignId('sanphamID')->constrained('sanpham')->cascadeOnDelete();
+            $table->string('duongdananh');
+            $table->timestamp('ngaytao')->useCurrent();
+            $table->timestamp('ngaycapnhat')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
@@ -23,6 +24,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_images');
+        Schema::dropIfExists('anhsanpham');
     }
 };

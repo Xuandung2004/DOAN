@@ -10,13 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('cart_items', function (Blueprint $table) {
+        Schema::create('giohangchitiet', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cart_id')->constrained('carts')->cascadeOnDelete();
-            $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
-            $table->integer('quantity')->default(1);
-            $table->decimal('price', 15, 2);
-            $table->timestamps();
+            $table->foreignId('giohangID')->constrained('giohang')->cascadeOnDelete();
+            $table->foreignId('sanphamID')->constrained('sanpham')->cascadeOnDelete();
+            $table->integer('soluong')->default(1);
+            $table->decimal('gia', 15, 2);
+            $table->timestamp('ngaytao')->useCurrent();
+            $table->timestamp('ngaycapnhat')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('cart_items');
+        Schema::dropIfExists('giohangchitiet');
     }
 };

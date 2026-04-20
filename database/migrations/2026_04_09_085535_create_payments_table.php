@@ -10,15 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('thanhtoan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
-            $table->string('transaction_id')->nullable();
-            $table->decimal('amount', 15, 2);
-            $table->string('bank_code')->nullable();
-            $table->string('response_code')->nullable();
-            $table->timestamp('payment_time')->nullable();
-            $table->timestamps();
+            $table->foreignId('donhangID')->constrained('donhang')->cascadeOnDelete();
+            $table->string('magiaodich')->nullable();
+            $table->decimal('sotien', 15, 2);
+            $table->string('manganhang')->nullable();
+            $table->string('maphanhoi')->nullable();
+            $table->timestamp('thoigianthanhtoan')->nullable();
+            $table->timestamp('ngaytao')->useCurrent();
+            $table->timestamp('ngaycapnhat')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
@@ -27,6 +28,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('thanhtoan');
     }
 };

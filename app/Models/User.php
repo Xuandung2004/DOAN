@@ -6,12 +6,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Traits\HasAttributeAliases;
 use Illuminate\Database\Eloquent\Relations\HasMany; // Nhúng thêm class HasMany
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasAttributeAliases;
+
+    protected $table = 'nguoidung';
+    public const CREATED_AT = 'ngaytao';
+    public const UPDATED_AT = 'ngaycapnhat';
 
     /**
      * The attributes that are mass assignable.
@@ -19,14 +24,20 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'hoten',
+        'name',  // Alias
         'email',
-        'password',
-        // --- Bổ sung các trường từ thiết kế DBML của bạn ---
-        'phone',
-        'address',
-        'google_id',
-        'role', // 0 = user, 1 = admin
+        'matkhau',
+        'password',  // Alias
+        'sodienthoai',
+        'phone',  // Alias
+        'diachi',
+        'address',  // Alias
+        'googleID',
+        'google_id',  // Alias
+        'vaitro',
+        'role',  // Alias
+        'trangthai',
     ];
 
     /**
@@ -35,22 +46,30 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'matkhau',
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'matkhau' => 'hashed',
+        'vaitro' => 'integer',
+        'trangthai' => 'integer',
+    ];
+
+    protected array $attributeAliases = [
+        'name' => 'hoten',
+        'password' => 'matkhau',
+        'phone' => 'sodienthoai',
+        'address' => 'diachi',
+        'google_id' => 'googleID',
+        'role' => 'vaitro',
+        'created_at' => 'ngaytao',
+        'updated_at' => 'ngaycapnhat',
+    ];
 
     // ==========================================
     // KHAI BÁO CÁC MỐI QUAN HỆ (RELATIONSHIPS)
@@ -62,7 +81,7 @@ class User extends Authenticatable
      */
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Order::class, 'nguoidungID');
     }
 
     /**
@@ -70,7 +89,7 @@ class User extends Authenticatable
      */
     public function carts(): HasMany
     {
-        return $this->hasMany(Cart::class);
+        return $this->hasMany(Cart::class, 'nguoidungID');
     }
 
     /**
@@ -78,7 +97,7 @@ class User extends Authenticatable
      */
     public function wishlists(): HasMany
     {
-        return $this->hasMany(Wishlist::class);
+        return $this->hasMany(Wishlist::class, 'nguoidungID');
     }
 
     /**
@@ -86,6 +105,30 @@ class User extends Authenticatable
      */
     public function reviews(): HasMany
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(Review::class, 'nguoidungID');
+    }
+
+    /**
+     * Một User có thể gửi nhiều tin nhắn
+     */
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'nguoiguiID');
+    }
+
+    /**
+     * Một User có thể nhận nhiều tin nhắn
+     */
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'nguoinhanID');
+    }
+
+    /**
+     * Override getAuthPassword() để dùng column 'matkhau' thực tế
+     */
+    public function getAuthPassword()
+    {
+        return $this->matkhau;
     }
 }

@@ -7,7 +7,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 
 Route::get('/', function () {
     return view('layouts.home');
-});
+})->name('home');
 Route::get('hello', function () {
     return view('layouts.hello');
 });

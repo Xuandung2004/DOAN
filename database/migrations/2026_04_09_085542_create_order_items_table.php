@@ -10,13 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('order_items', function (Blueprint $table) {
+        Schema::create('donhangchitiet', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
-            $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
-            $table->integer('quantity');
-            $table->decimal('price', 15, 2);
-            $table->timestamps();
+            $table->foreignId('donhangID')->constrained('donhang')->cascadeOnDelete();
+            $table->foreignId('sanphamID')->constrained('sanpham')->cascadeOnDelete();
+            $table->integer('soluong');
+            $table->decimal('gia', 15, 2);
+            $table->timestamp('ngaytao')->useCurrent();
+            $table->timestamp('ngaycapnhat')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_items');
+        Schema::dropIfExists('donhangchitiet');
     }
 };

@@ -10,16 +10,17 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('coupons', function (Blueprint $table) {
+        Schema::create('magiamgia', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->string('type'); // percent, fixed
-            $table->decimal('value', 15, 2);
-            $table->decimal('min_order_amount', 15, 2)->default(0);
-            $table->integer('usage_limit')->nullable();
-            $table->integer('used')->default(0);
-            $table->timestamp('expires_at')->nullable();
-            $table->timestamps();
+            $table->string('ma')->unique();
+            $table->string('loai');
+            $table->decimal('giatri', 15, 2);
+            $table->decimal('giatridontoithieu', 15, 2)->default(0);
+            $table->integer('gioihansudung')->nullable();
+            $table->integer('dasudung')->default(0);
+            $table->timestamp('hethan')->nullable();
+            $table->timestamp('ngaytao')->useCurrent();
+            $table->timestamp('ngaycapnhat')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
@@ -28,6 +29,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('coupons');
+        Schema::dropIfExists('magiamgia');
     }
 };

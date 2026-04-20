@@ -3,40 +3,67 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\HasAttributeAliases;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
+    use HasAttributeAliases;
+
+    protected $table = 'donhang';
+    public const CREATED_AT = 'ngaytao';
+    public const UPDATED_AT = 'ngaycapnhat';
+
     protected $fillable = [
-        'user_id',
-        'total_price',
-        'shipping_address',
-        'payment_method',
-        'payment_status',
-        'order_status',
-        'coupon_id',
-        'discount_amount'
+        'nguoidungID',
+        'tongtien',
+        'diachigiaohang',
+        'phuongthucthanhtoan',
+        'trangthaithanhtoan',
+        'trangthaidon',
+        'magiamgiaID',
+        'sotiengiam',
+    ];
+
+    protected array $attributeAliases = [
+        'user_id' => 'nguoidungID',
+        'total_price' => 'tongtien',
+        'shipping_address' => 'diachigiaohang',
+        'payment_method' => 'phuongthucthanhtoan',
+        'payment_status' => 'trangthaithanhtoan',
+        'order_status' => 'trangthaidon',
+        'coupon_id' => 'magiamgiaID',
+        'discount_amount' => 'sotiengiam',
+        'created_at' => 'ngaytao',
+        'updated_at' => 'ngaycapnhat',
+    ];
+
+    protected $casts = [
+        'tongtien' => 'decimal:2',
+        'sotiengiam' => 'decimal:2',
+        'trangthaithanhtoan' => 'integer',
+        'trangthaidon' => 'integer',
     ];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'nguoidungID');
     }
 
     public function coupon(): BelongsTo
     {
-        return $this->belongsTo(Coupon::class);
+        return $this->belongsTo(Coupon::class, 'magiamgiaID');
     }
 
     public function orderItems(): HasMany
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderItem::class, 'donhangID');
     }
 
     public function payment(): HasOne
     {
-        return $this->hasOne(Payment::class);
+        return $this->hasOne(Payment::class, 'donhangID');
     }
 }

@@ -40,7 +40,7 @@ class GoogleController extends Controller
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
                     'google_id' => $googleUser->getId(),
-                    'password' => bcrypt(Str::random(16)), // Gán mật khẩu ngẫu nhiên cho an toàn
+                    'password' => Str::random(16), // Mật khẩu ngẫu nhiên, cast 'hashed' sẽ tự động hash
                     'role' => 0,
                 ]);
                 Auth::login($newUser);
