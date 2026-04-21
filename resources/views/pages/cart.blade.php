@@ -11,7 +11,7 @@
         </div>
 
         <div class="row">
-            @if(!$cart || $cart->items->count() === 0)
+            @if(!$cart || $cart->cartItems->count() === 0)
                 <div class="col-12 text-center" id="empty-cart">
                     <div class="py-5 shadow-sm rounded bg-light border">
                         <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
@@ -41,7 +41,7 @@
                             </thead>
                             <tbody class="cart-list">
 
-                                @foreach($cart->items as $item)
+                                @foreach($cart->cartItems as $item)
                                     <tr class="border-bottom cart-row" data-product-id="{{ $item->sanphamID }}">
                                         <td class="ps-3">
                                             <div class="d-flex align-items-center gap-3">

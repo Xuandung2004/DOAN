@@ -222,10 +222,12 @@
                     icon.classList.remove('far');
                     icon.classList.add('fas', 'text-danger'); // Tô màu đỏ
                     text.innerText = 'Đã yêu thích';
+                    document.getElementById('wishlistItemCount').innerText = currentCount + 1;
                 } else if (data.status === 'removed') {
                     icon.classList.remove('fas', 'text-danger'); // Bỏ màu đỏ
                     icon.classList.add('far');
                     text.innerText = 'Thêm vào yêu thích';
+                    document.getElementById('wishlistItemCount').innerText = currentCount - 1;
                 }
 
                 // Hiện thông báo nhỏ (Tương lai ông bạn có thể dùng thư viện SweetAlert2 cho đẹp)
@@ -264,6 +266,10 @@
                     alert(data.message); // Hiển thị thành công
                     // Tương lai ông bạn có thể dùng JS update con số trên cái icon Giỏ hàng ở Header:
                     // document.getElementById('cartItemCount').innerText = data.totalItems;
+                    let cartBadge = document.getElementById('cartItemCount');
+                    if (cartBadge) {
+                        cartBadge.innerText = data.totalItems;
+                    }
                 } else {
                     alert(data.message); // Hiển thị lỗi (ví dụ: Hết hàng)
                 }

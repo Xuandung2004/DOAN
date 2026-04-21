@@ -407,14 +407,44 @@
 
                 <div class="col-3 col-lg-auto">
                     <ul class="list-unstyled d-flex m-0">
+                        @php
+                            $wishlistCount = 0;
+                            $cartCount = 0;
+
+                            if (Auth::check()) {
+                                // Đếm tổng số dòng trong bảng YeuThich của user này
+                                $wishlistCount = \App\Models\Wishlist::where('nguoidungID', Auth::id())->count();
+
+                                // Tìm giỏ hàng của user này
+                                $cart = \App\Models\Cart::where('nguoidungID', Auth::id())->first();
+                                if ($cart) {
+                                    // Tính tổng cột 'soluong' trong bảng GioHangChiTiet
+                                    $cartCount = \App\Models\CartItem::where('giohangID', $cart->id)->sum('soluong');
+                                }
+                            }
+                        @endphp
+
                         <li class="d-none d-lg-block">
-                            <a href="{{ route('wishlist') }}" class="text-uppercase mx-3">Yêu thích <span
-                                    class="wishlist-count">(0)</span>
+                            <a href="{{ route('wishlist') }}"
+                                class="text-uppercase mx-3 position-relative text-decoration-none">
+                                Yêu thích
+                                <span id="wishlistItemCount"
+                                    class="wishlist-count badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle"
+                                    style="font-size: 0.7rem;">
+                                    {{ $wishlistCount }}
+                                </span>
                             </a>
                         </li>
+
                         <li class="d-none d-lg-block">
-                            <a href="{{ route('cart') }}" class="text-uppercase mx-3">Giỏ <span
-                                    class="cart-count">(0)</span>
+                            <a href="{{ route('cart') }}"
+                                class="text-uppercase mx-3 position-relative text-decoration-none">
+                                Giỏ hàng
+                                <span id="cartItemCount"
+                                    class="cart-count badge bg-primary rounded-pill position-absolute top-0 start-100 translate-middle"
+                                    style="font-size: 0.7rem;">
+                                    {{ $cartCount }}
+                                </span>
                             </a>
                         </li>
                         <li class="d-lg-none">

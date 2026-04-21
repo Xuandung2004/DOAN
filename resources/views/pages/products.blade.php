@@ -170,10 +170,11 @@
                 if (data.status === 'success') {
                     // Thông báo thành công mượt mà
                     alert(data.message);
-
-                    // Nếu có icon giỏ hàng trên header thì update số lượng ở đây
-                    // let cartBadge = document.getElementById('cartItemCount');
-                    // if (cartBadge) cartBadge.innerText = data.totalItems;
+                    // Đếm số 
+                    let cartBadge = document.getElementById('cartItemCount');
+                    if (cartBadge) {
+                        cartBadge.innerText = data.totalItems;
+                    }
                 } else {
                     // Thông báo lỗi (ví dụ hết hàng)
                     alert(data.message);

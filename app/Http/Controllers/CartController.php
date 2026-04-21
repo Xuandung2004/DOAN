@@ -22,14 +22,14 @@ class CartController extends Controller
         }
 
         // Lấy giỏ hàng của user hiện tại, kèm theo thông tin chi tiết sản phẩm và ảnh
-        $cart = Cart::with(['items.product.images'])->where('nguoidungID', Auth::id())->first();
+        $cart = Cart::with(['cartItems.product.images'])->where('nguoidungID', Auth::id())->first();
 
         // Tính tổng tiền tạm tính
         $tamTinh = 0;
         $tongSanPham = 0;
 
         if ($cart) {
-            foreach ($cart->items as $item) {
+            foreach ($cart->cartItems as $item) {
                 $tamTinh += ($item->gia * $item->soluong);
                 $tongSanPham += $item->soluong;
             }

@@ -40,4 +40,23 @@ class WishlistController extends Controller
             return response()->json(['status' => 'added', 'message' => 'Đã thêm vào danh sách yêu thích!']);
         }
     }
+    /**
+     * Hiển thị trang Danh sách yêu thích
+     */
+    public function index()
+    {
+        // 1. Kiểm tra đăng nhập
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('thongbao', 'Vui lòng đăng nhập để xem danh sách yêu thích.');
+        }
+
+        // 2. Lấy danh sách yêu thích của User (Kèm theo thông tin Product và Ảnh để tối ưu tốc độ)
+        $wishlists = Wishlist::with(['product.images'])
+                        ->where('nguoidungID', Auth::id())
+                        ->orderBy('ngaytao', 'desc')
+                        ->get();
+
+        // 3. Trả về View
+        return view('pages.wishlist', compact('wishlists'));
+    }
 }

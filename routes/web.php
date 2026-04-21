@@ -11,16 +11,17 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CartController;
 
 // Giỏ hàng
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 
 
 // Gọi bằng phương thức POST để bảo mật (Không để trong middleware auth vì JS sẽ tự bắt lỗi báo cho người dùng)
 Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
 // Trang chủ
-Route::get('/', function () {
-    return view('layouts.home');
+Route::get('/admin', function () {
+    return view('admin.products.index');
 })->name('home');
 Route::get('hello', function () {
     return view('layouts.hello');
@@ -46,14 +47,6 @@ Route::get('/promotions', function () {
 Route::get('/contact', function () {
     return view('pages.contact');
 })->name('contact');
-
-Route::get('/wishlist', function () {
-    return view('pages.wishlist');
-})->name('wishlist');
-
-Route::get('/cart', function () {
-    return view('pages.cart');
-})->name('cart');
 
 // ==========================================
 // AUTH ROUTES
@@ -97,11 +90,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 // Route Custom để Khóa / Mở khóa tài khoản (thay thế cho việc xóa cứng)
     Route::put('users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
 
-//     // Quản lý sản phẩm
-//     Route::resource('products', ProductController::class);
-//     Route::get('products/search', [ProductController::class, 'search'])->name('products.search');
-//     Route::patch('products/{id}/status', [ProductController::class, 'updateStatus'])->name('products.updateStatus');
-//     Route::patch('products/{id}/price', [ProductController::class, 'updatePrice'])->name('products.updatePrice');
-//     Route::patch('products/{id}/stock', [ProductController::class, 'updateStock'])->name('products.updateStock');
-//     Route::delete('products/{anhID}/image', [ProductController::class, 'deleteImage'])->name('products.deleteImage');
+// Quản lý sản phẩm
+    
+    // 1. Resource Route cho các chức năng CRUD chuẩn:
+    // products.index, products.create, products.store, products.edit, products.update
+    Route::resource('products', ProductController::class);
+
+    // 2. Route cho chức năng Ẩn/Hiện sản phẩm (Dùng PATCH vì chỉ cập nhật 1 phần dữ liệu)
+    Route::patch('products/{id}/toggle-status', [ProductController::class, 'toggleStatus'])
+        ->name('products.toggle');
+
+    // 3. Route để xóa 1 ảnh cụ thể của sản phẩm
+    Route::delete('products/image/{id}', [ProductController::class, 'destroyImage'])
+        ->name('products.destroyImage');
+
 });
