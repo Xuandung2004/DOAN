@@ -20,8 +20,8 @@ Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.rem
 Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
 // Trang chủ
-Route::get('/admin', function () {
-    return view('admin.products.index');
+Route::get('/', function () {
+    return view('layouts.home');
 })->name('home');
 Route::get('hello', function () {
     return view('layouts.hello');
@@ -84,7 +84,7 @@ Route::middleware('auth')->group(function () {
 // ==========================================
 // ADMIN ROUTES
 // ==========================================
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth'])->prefix('admin')->group(function () {
 // Quản lý người dùng: Dùng resource nhưng BỎ QUA hàm show và destroy (vì mình không dùng)
     Route::resource('users', UserController::class)->except(['show', 'destroy']);
 // Route Custom để Khóa / Mở khóa tài khoản (thay thế cho việc xóa cứng)
@@ -103,5 +103,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // 3. Route để xóa 1 ảnh cụ thể của sản phẩm
     Route::delete('products/image/{id}', [ProductController::class, 'destroyImage'])
         ->name('products.destroyImage');
+    // index admin
+    Route::get('/', function () {
+        return view('admin.index');
+    })->name('admin.index');
 
+    // Quản lý người dùng
+    Route::resource('users', UserController::class);
+    Route::put('users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
 });

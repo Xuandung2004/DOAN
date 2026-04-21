@@ -77,14 +77,18 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('thongbao', 'Cập nhật người dùng thành công!');
     }
+// mở khóa tài khoản (thay thế cho xóa cứng)
+    public function toggleStatus($id)
+{
+    $user = User::findOrFail($id);
+    
+    // Nếu đang là 1 (Hoạt động) thì thành 0 (Khóa) và ngược lại
+    $user->trangthai = ($user->trangthai == 1) ? 0 : 1;
+    $user->save();
 
-    public function destroy($id)
-    {
-        $user = User::findOrFail($id);
-        $user->delete();
-
-        return redirect()->route('users.index')->with('thongbao', 'Xóa người dùng thành công!');
-    }
+    $message = $user->trangthai == 1 ? 'Đã mở khóa tài khoản!' : 'Đã khóa tài khoản thành công!';
+    return back()->with('thongbao', $message);
+}
 
     // ==========================================
     // PHẦN DÀNH CHO USER (GIAO DIỆN KHÁCH HÀNG)

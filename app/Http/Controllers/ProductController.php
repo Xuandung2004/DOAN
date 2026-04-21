@@ -21,7 +21,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         // Lấy danh sách sản phẩm, kèm theo tên danh mục (để tránh lỗi N+1 Query)
-        $products = Product::with('category')->orderBy('ngaytao', 'desc')->paginate(10);
+        $products = Product::with('category')->where('trangthai', '>=',0)->orderBy('ngaytao', 'desc')->paginate(10);
         return view('admin.products.index', compact('products'));
     }
 
@@ -129,7 +129,20 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('thongbao', 'Cập nhật sản phẩm thành công!');
     }
+     /**
+     * Xóa mềm sản phẩm (Đổi trạng thái thay vì xóa cứng khỏi DB)
+     */
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+        
+        // Thay vì dùng $product->delete() để xóa cứng, ta đổi trạng thái
+        // Quy ước: -1 là Đã xóa (vào thùng rác)
+        $product->trangthai = -1; 
+        $product->save();
 
+        return redirect()->route('products.index')->with('thongbao', 'Đã chuyển sản phẩm vào thùng rác!');
+    }
     /**
      * Ẩn / Hiện sản phẩm (Thay vì xóa cứng)
      */
