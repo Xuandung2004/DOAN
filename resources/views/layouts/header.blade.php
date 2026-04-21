@@ -211,8 +211,17 @@
             </form>
             <h5 class="cat-list-title">Browse Categories</h5>
             <ul class="cat-list">
-                <li class="cat-list-item"><a href="{{ route('products.boys') }}" title="Đồ bé trai">Đồ bé trai</a></li>
-                <li class="cat-list-item"><a href="{{ route('products.girls') }}" title="Đồ bé gái">Đồ bé gái</a></li>
+                @php
+                    $sidebarCategories = \App\Models\Category::all();
+                @endphp
+
+                @foreach($sidebarCategories as $category)
+                    <li class="cat-list-item">
+                        <a href="{{ route('products', ['danhmuc' => $category->id]) }}" title="{{ $category->ten }}">
+                            {{ $category->ten }}
+                        </a>
+                    </li>
+                @endforeach
                 <li class="cat-list-item"><a href="{{ route('promotions') }}" title="Khuyến mãi">Khuyến mãi</a></li>
                 <li class="cat-list-item"><a href="{{ route('products') }}" title="Tất cả sản phẩm">Tất cả sản phẩm</a>
                 </li>
@@ -298,19 +307,21 @@
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="{{ route('products') }}" id="dropdownShop"
-                                        aria-haspopup="true" aria-expanded="false">Sản
-                                        phẩm</a>
-                                    <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownShop">
-                                        <li>
-                                            <a href="{{ route('products.boys') }}" class="dropdown-item item-anchor">Đồ
-                                                bé trai </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('products.girls') }}" class="dropdown-item item-anchor">Đồ
-                                                bé gái
-                                            </a>
-                                        </li>
+                                        aria-haspopup="true" aria-expanded="false">Sản phẩm</a>
 
+                                    <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownShop">
+                                        @php
+                                            $menuCategories = \App\Models\Category::all();
+                                        @endphp
+
+                                        @foreach($menuCategories as $category)
+                                            <li>
+                                                <a href="{{ route('products', ['danhmuc' => $category->id]) }}"
+                                                    class="dropdown-item item-anchor">
+                                                    {{ $category->ten }}
+                                                </a>
+                                            </li>
+                                        @endforeach
                                     </ul>
                                 </li>
                                 {{-- <li class="nav-item dropdown">

@@ -17,17 +17,18 @@
                     <div class="swiper-slide">
                         <div class="banner-item image-zoom-effect">
                             <div class="image-holder">
-                                <a href="#">
+                                <a href="{{ route('products', ['danhmuc' => 1]) }}">
                                     <img src="{{ asset('images/banner-image-6.jpg') }}" alt="product" class="img-fluid">
                                 </a>
                             </div>
                             <div class="banner-content py-4">
                                 <h5 class="element-title text-uppercase">
-                                    <a href="{{ route('products.boys') }}" class="item-anchor">Áo khoác cho bé</a>
+                                    <a href="{{ route('products', ['danhmuc' => 1]) }}" class="item-anchor">Áo khoác cho
+                                        bé</a>
                                 </h5>
                                 <p>Chất liệu cao cấp, mềm mại và an toàn cho làn da nhạy cảm của bé.</p>
                                 <div class="btn-left">
-                                    <a href="{{ route('products.boys') }}"
+                                    <a href="{{ route('products', ['danhmuc' => 1]) }}"
                                         class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Khám phá
                                         ngay</a>
                                 </div>
@@ -38,17 +39,18 @@
                     <div class="swiper-slide">
                         <div class="banner-item image-zoom-effect">
                             <div class="image-holder">
-                                <a href="#">
+                                <a href="{{ route('products', ['danhmuc' => 2]) }}">
                                     <img src="{{ asset('images/banner-image-1.jpg') }}" alt="product" class="img-fluid">
                                 </a>
                             </div>
                             <div class="banner-content py-4">
                                 <h5 class="element-title text-uppercase">
-                                    <a href="{{ route('products.girls') }}" class="item-anchor">Váy công chúa</a>
+                                    <a href="{{ route('products', ['danhmuc' => 2]) }}" class="item-anchor">Váy công
+                                        chúa</a>
                                 </h5>
                                 <p>Thiết kế xinh xắn, chất vải thoáng mát giúp bé tự tin tỏa sáng.</p>
                                 <div class="btn-left">
-                                    <a href="{{ route('products.girls') }}"
+                                    <a href="{{ route('products', ['danhmuc' => 2]) }}"
                                         class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Khám phá
                                         ngay</a>
                                 </div>
@@ -59,17 +61,18 @@
                     <div class="swiper-slide">
                         <div class="banner-item image-zoom-effect">
                             <div class="image-holder">
-                                <a href="#">
+                                <a href="{{ route('products', ['danhmuc' => 1]) }}">
                                     <img src="{{ asset('images/banner-image-2.jpg') }}" alt="product" class="img-fluid">
                                 </a>
                             </div>
                             <div class="banner-content py-4">
                                 <h5 class="element-title text-uppercase">
-                                    <a href="{{ route('products.boys') }}" class="item-anchor">Bộ thun năng động</a>
+                                    <a href="{{ route('products', ['danhmuc' => 1]) }}" class="item-anchor">Bộ thun năng
+                                        động</a>
                                 </h5>
                                 <p>Thấm hút mồ hôi tốt, phù hợp cho các hoạt động vui chơi ngoài trời.</p>
                                 <div class="btn-left">
-                                    <a href="{{ route('products.boys') }}"
+                                    <a href="{{ route('products', ['danhmuc' => 1]) }}"
                                         class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Khám phá
                                         ngay</a>
                                 </div>
@@ -80,38 +83,18 @@
                     <div class="swiper-slide">
                         <div class="banner-item image-zoom-effect">
                             <div class="image-holder">
-                                <a href="#">
+                                <a href="{{ route('products', ['danhmuc' => 3]) }}">
                                     <img src="{{ asset('images/banner-image-3.jpg') }}" alt="product" class="img-fluid">
                                 </a>
                             </div>
                             <div class="banner-content py-4">
                                 <h5 class="element-title text-uppercase">
-                                    <a href="{{ route('products') }}" class="item-anchor">Áo len ấm áp</a>
-                                </h5>
-                                <p>Giữ ấm hoàn hảo cho bé trong những ngày thời tiết se lạnh.</p>
-                                <div class="btn-left">
-                                    <a href="{{ route('products') }}"
-                                        class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Khám phá
-                                        ngay</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="banner-item image-zoom-effect">
-                            <div class="image-holder">
-                                <a href="#">
-                                    <img src="{{ asset('images/banner-image-4.jpg') }}" alt="product" class="img-fluid">
-                                </a>
-                            </div>
-                            <div class="banner-content py-4">
-                                <h5 class="element-title text-uppercase">
-                                    <a href="{{ route('products') }}" class="item-anchor">Set đồ sơ sinh</a>
+                                    <a href="{{ route('products', ['danhmuc' => 3]) }}" class="item-anchor">Set đồ sơ
+                                        sinh</a>
                                 </h5>
                                 <p>Nâng niu làn da nhạy cảm với 100% cotton hữu cơ tự nhiên.</p>
                                 <div class="btn-left">
-                                    <a href="{{ route('products') }}"
+                                    <a href="{{ route('products', ['danhmuc' => 3]) }}"
                                         class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Khám phá
                                         ngay</a>
                                 </div>
@@ -122,7 +105,7 @@
                     <div class="swiper-slide">
                         <div class="banner-item image-zoom-effect">
                             <div class="image-holder">
-                                <a href="#">
+                                <a href="{{ route('products') }}">
                                     <img src="{{ asset('images/banner-image-5.jpg') }}" alt="product" class="img-fluid">
                                 </a>
                             </div>

@@ -1,4 +1,5 @@
 @include('layouts.header')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <section id="products" class="py-5">
     <div class="container">
@@ -8,129 +9,82 @@
             </div>
         </div>
 
-        <!-- Category Filter -->
         <div class="row mb-5" data-aos="fade-up" data-aos-delay="100">
             <div class="col-12 text-center">
-                <a href="{{ route('products') }}" class="btn btn-link text-decoration-none me-3">Tất cả</a>
-                <a href="{{ route('products.boys') }}" class="btn btn-link text-decoration-none me-3">Đồ bé trai</a>
-                <a href="{{ route('products.girls') }}" class="btn btn-link text-decoration-none">Đồ bé gái</a>
+                <a href="{{ route('products') }}" class="btn btn-link text-decoration-none me-3 fw-bold">Tất cả</a>
+                @foreach($danhmucs as $dm)
+                    <a href="{{ route('products', ['danhmuc' => $dm->id]) }}"
+                        class="btn btn-link text-decoration-none me-3">
+                        {{ $dm->ten }}
+                    </a>
+                @endforeach
             </div>
         </div>
 
-        <!-- Product Grid -->
         <div class="row">
-            <!-- Product 1 -->
-            <div class="col-md-6 col-lg-3 mb-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="product-item">
-                    <div class="product-image position-relative overflow-hidden rounded-3">
-                        <a href="#">
-                            <img src="{{ asset('images/product-item-1.jpg') }}" alt="Áo thun bé trai" class="img-fluid">
-                        </a>
-                        <div class="product-overlay d-flex align-items-center justify-content-center position-absolute">
-                            <a href="#" class="btn btn-light btn-sm">Xem chi tiết</a>
-                        </div>
-                    </div>
-                    <div class="product-content text-center py-3">
-                        <h5 class="product-title">Áo thun bé trai</h5>
-                        <p class="product-category text-muted small mb-2">Áo thun - Đồ bé trai</p>
-                        <div class="product-rating mb-2">
-                            <span class="star">★★★★★</span> (12 đánh giá)
-                        </div>
-                        <div class="product-price">
-                            <span class="price text-primary fw-bold">189.000₫</span>
-                            <span class="original-price text-muted text-decoration-line-through ms-2">250.000₫</span>
-                        </div>
-                        <button class="btn btn-primary btn-sm mt-3 w-100">Thêm vào giỏ</button>
-                    </div>
-                </div>
-            </div>
+            @if($sanphams->count() > 0)
+                @foreach($sanphams as $index => $sp)
+                    @php $delay = ($index % 4) * 100 + 100; @endphp
 
-            <!-- Product 2 -->
-            <div class="col-md-6 col-lg-3 mb-4" data-aos="fade-up" data-aos-delay="200">
-                <div class="product-item">
-                    <div class="product-image position-relative overflow-hidden rounded-3">
-                        <a href="#">
-                            <img src="{{ asset('images/product-item-2.jpg') }}" alt="Váy công chúa bé gái"
-                                class="img-fluid">
-                        </a>
-                        <div class="product-overlay d-flex align-items-center justify-content-center position-absolute">
-                            <a href="#" class="btn btn-light btn-sm">Xem chi tiết</a>
-                        </div>
-                    </div>
-                    <div class="product-content text-center py-3">
-                        <h5 class="product-title">Váy công chúa bé gái</h5>
-                        <p class="product-category text-muted small mb-2">Váy - Đồ bé gái</p>
-                        <div class="product-rating mb-2">
-                            <span class="star">★★★★☆</span> (8 đánh giá)
-                        </div>
-                        <div class="product-price">
-                            <span class="price text-primary fw-bold">299.000₫</span>
-                            <span class="original-price text-muted text-decoration-line-through ms-2">380.000₫</span>
-                        </div>
-                        <button class="btn btn-primary btn-sm mt-3 w-100">Thêm vào giỏ</button>
-                    </div>
-                </div>
-            </div>
+                    <div class="col-md-6 col-lg-3 mb-4" data-aos="fade-up" data-aos-delay="{{ $delay }}">
+                        <div class="product-item">
+                            <div class="product-image position-relative overflow-hidden rounded-3">
+                                <a href="{{ route('product.detail', $sp->duongdan) }}">
+                                    @if($sp->images->isNotEmpty())
+                                        <img src="{{ asset($sp->images->first()->duongdananh) }}" alt="{{ $sp->ten }}"
+                                            class="img-fluid">
+                                    @else
+                                        <img src="{{ asset('images/default-product.jpg') }}" alt="Chưa có ảnh" class="img-fluid">
+                                    @endif
+                                </a>
+                                <div class="product-overlay d-flex align-items-center justify-content-center position-absolute">
+                                    <a href="{{ route('product.detail', $sp->duongdan) }}" class="btn btn-light btn-sm">Xem chi
+                                        tiết</a>
+                                </div>
+                            </div>
 
-            <!-- Product 3 -->
-            <div class="col-md-6 col-lg-3 mb-4" data-aos="fade-up" data-aos-delay="300">
-                <div class="product-item">
-                    <div class="product-image position-relative overflow-hidden rounded-3">
-                        <a href="#">
-                            <img src="{{ asset('images/product-item-3.jpg') }}" alt="Bộ thun năng động"
-                                class="img-fluid">
-                        </a>
-                        <div class="product-overlay d-flex align-items-center justify-content-center position-absolute">
-                            <a href="#" class="btn btn-light btn-sm">Xem chi tiết</a>
-                        </div>
-                    </div>
-                    <div class="product-content text-center py-3">
-                        <h5 class="product-title">Bộ thun năng động</h5>
-                        <p class="product-category text-muted small mb-2">Bộ thun - Đồ bé trai</p>
-                        <div class="product-rating mb-2">
-                            <span class="star">★★★★★</span> (15 đánh giá)
-                        </div>
-                        <div class="product-price">
-                            <span class="price text-primary fw-bold">199.000₫</span>
-                            <span class="original-price text-muted text-decoration-line-through ms-2">280.000₫</span>
-                        </div>
-                        <button class="btn btn-primary btn-sm mt-3 w-100">Thêm vào giỏ</button>
-                    </div>
-                </div>
-            </div>
+                            <div class="product-content text-center py-3 px-2">
+                                <h5 class="product-title text-truncate" title="{{ $sp->ten }}">{{ $sp->ten }}</h5>
 
-            <!-- Product 4 -->
-            <div class="col-md-6 col-lg-3 mb-4" data-aos="fade-up" data-aos-delay="400">
-                <div class="product-item">
-                    <div class="product-image position-relative overflow-hidden rounded-3">
-                        <a href="#">
-                            <img src="{{ asset('images/product-item-4.jpg') }}" alt="Áo khoác phong cách"
-                                class="img-fluid">
-                        </a>
-                        <div class="product-overlay d-flex align-items-center justify-content-center position-absolute">
-                            <a href="#" class="btn btn-light btn-sm">Xem chi tiết</a>
+                                <p class="product-category text-muted small mb-2">
+                                    {{ $sp->category ? $sp->category->ten : 'Chưa phân loại' }}
+                                </p>
+
+                                <div class="product-rating mb-2">
+                                    <span class="star text-warning">★</span>
+                                    <span>{{ number_format($sp->diemtrungbinh, 1) }}/5.0</span>
+                                </div>
+
+                                <div class="product-price">
+                                    @if($sp->giagiam > 0 && $sp->giagiam < $sp->gia)
+                                        <span
+                                            class="price text-primary fw-bold">{{ number_format($sp->giagiam, 0, ',', '.') }}₫</span>
+                                        <span
+                                            class="original-price text-muted text-decoration-line-through ms-2">{{ number_format($sp->gia, 0, ',', '.') }}₫</span>
+                                    @else
+                                        <span class="price text-primary fw-bold">{{ number_format($sp->gia, 0, ',', '.') }}₫</span>
+                                    @endif
+                                </div>
+
+                                <button type="button" class="btn btn-primary btn-sm mt-3 w-100"
+                                    onclick="addSingleItemToCart({{ $sp->id }})">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div class="product-content text-center py-3">
-                        <h5 class="product-title">Áo khoác phong cách</h5>
-                        <p class="product-category text-muted small mb-2">Áo khoác - Đồ bé gái</p>
-                        <div class="product-rating mb-2">
-                            <span class="star">★★★★☆</span> (10 đánh giá)
-                        </div>
-                        <div class="product-price">
-                            <span class="price text-primary fw-bold">249.000₫</span>
-                            <span class="original-price text-muted text-decoration-line-through ms-2">350.000₫</span>
-                        </div>
-                        <button class="btn btn-primary btn-sm mt-3 w-100">Thêm vào giỏ</button>
-                    </div>
+                @endforeach
+            @else
+                <div class="col-12 text-center py-5">
+                    <h4 class="text-muted">Không tìm thấy sản phẩm nào!</h4>
+                    <p>Hãy thử chọn một danh mục khác hoặc xóa bộ lọc tìm kiếm.</p>
                 </div>
-            </div>
+            @endif
         </div>
 
-        <!-- Load More Button -->
         <div class="row mt-5">
-            <div class="col-12 text-center">
-                <button class="btn btn-outline-primary btn-lg">Xem thêm sản phẩm</button>
+            <div class="col-12 d-flex justify-content-center">
+                {{ $sanphams->links() }}
             </div>
         </div>
     </div>
@@ -144,6 +98,8 @@
     .product-image {
         aspect-ratio: 1;
         overflow: hidden;
+        background-color: #f8f9fa;
+        /* Thêm nền màu xám nhạt để phòng trường hợp ảnh trong suốt */
     }
 
     .product-image img {
@@ -171,15 +127,59 @@
         opacity: 1;
     }
 
-    .product-rating .star {
-        color: #ffc107;
-    }
-
     .product-content {
         border: 1px solid #e9ecef;
         border-top: none;
         border-radius: 0 0 20px 20px;
     }
+
+    /* Làm đẹp giao diện phân trang mặc định của Laravel */
+    nav svg {
+        height: 20px;
+    }
 </style>
 
+<script>
+    function addSingleItemToCart(productId) {
+        // 1. Lấy mã bảo vệ của Laravel
+        let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // 2. Bắn AJAX về Server (Bếp)
+        fetch('{{ route('cart.add') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                sanpham_id: productId,
+                soluong: 1 // Fix cứng mua 1 cái vì đang ở ngoài danh sách
+            })
+        })
+            .then(response => {
+                if (response.status === 401) {
+                    // Chưa đăng nhập thì đuổi ra trang login
+                    alert('Vui lòng đăng nhập để mua hàng!');
+                    window.location.href = '{{ route('login') }}';
+                    throw new Error('Not logged in');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    // Thông báo thành công mượt mà
+                    alert(data.message);
+
+                    // Nếu có icon giỏ hàng trên header thì update số lượng ở đây
+                    // let cartBadge = document.getElementById('cartItemCount');
+                    // if (cartBadge) cartBadge.innerText = data.totalItems;
+                } else {
+                    // Thông báo lỗi (ví dụ hết hàng)
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
 @include('layouts.footer')
