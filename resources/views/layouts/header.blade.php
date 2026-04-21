@@ -25,6 +25,48 @@
         href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Marcellus&display=swap"
         rel="stylesheet">
 </head>
+<style>
+    /* Khi trỏ chuột vào thẻ cha (li.dropdown), cho thẻ con (ul.dropdown-menu) hiện lên */
+    .nav-item.dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0;
+    }
+
+    /* Style cho dropdown user */
+    .nav-item.dropdown .dropdown-menu {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border: none;
+        border-radius: 8px;
+        top: 100%;
+        left: auto;
+        right: 0;
+    }
+
+    .nav-item.dropdown .dropdown-item {
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-item.dropdown .dropdown-item:hover {
+        background-color: #f0f0f0;
+        color: #0d6efd;
+    }
+
+    .nav-item.dropdown .dropdown-header {
+        font-weight: 600;
+        padding: 12px 20px;
+        margin-bottom: 0;
+    }
+
+    .search-button {
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+    }
+
+    .search-button:hover {
+        opacity: 0.7;
+    }
+</style>
 
 <body class="homepage">
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -169,13 +211,11 @@
             </form>
             <h5 class="cat-list-title">Browse Categories</h5>
             <ul class="cat-list">
-                <li class="cat-list-item"><a href="#" title="Jackets">Jackets</a></li>
-                <li class="cat-list-item"><a href="#" title="T-shirts">T-shirts</a></li>
-                <li class="cat-list-item"><a href="#" title="Handbags">Handbags</a></li>
-                <li class="cat-list-item"><a href="#" title="Accessories">Accessories</a></li>
-                <li class="cat-list-item"><a href="#" title="Cosmetics">Cosmetics</a></li>
-                <li class="cat-list-item"><a href="#" title="Dresses">Dresses</a></li>
-                <li class="cat-list-item"><a href="#" title="Jumpsuits">Jumpsuits</a></li>
+                <li class="cat-list-item"><a href="{{ route('products.boys') }}" title="Đồ bé trai">Đồ bé trai</a></li>
+                <li class="cat-list-item"><a href="{{ route('products.girls') }}" title="Đồ bé gái">Đồ bé gái</a></li>
+                <li class="cat-list-item"><a href="{{ route('promotions') }}" title="Khuyến mãi">Khuyến mãi</a></li>
+                <li class="cat-list-item"><a href="{{ route('products') }}" title="Tất cả sản phẩm">Tất cả sản phẩm</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -228,7 +268,7 @@
             <div class="row justify-content-between align-items-center w-100">
 
                 <div class="col-auto">
-                    <a class="navbar-brand text-white" href="index.html">
+                    <a class="navbar-brand text-white" href="{{ route('home') }}">
                         <svg width="112" height="45" viewBox="0 0 112 45" xmlns="http://www.w3.org/2000/svg"
                             fill="#111">
                             <path
@@ -253,63 +293,27 @@
 
                         <div class="offcanvas-body">
                             <ul class="navbar-nav justify-content-end flex-grow-1 gap-1 gap-md-5 pe-3">
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle active" href="#" id="dropdownHome"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home</a>
-                                    <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownHome">
-                                        <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Home Layout 1</a>
-                                        </li>
-                                        <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Home Layout 2 </a>
-                                        </li>
-                                        <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Home Layout 3 </a>
-                                        </li>
-                                        <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Home Layout 4 </a>
-                                        </li>
-                                    </ul>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('home') }}">Trang chủ</a>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="dropdownShop"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
+                                    <a class="nav-link dropdown-toggle" href="{{ route('products') }}" id="dropdownShop"
+                                        aria-haspopup="true" aria-expanded="false">Sản
+                                        phẩm</a>
                                     <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownShop">
                                         <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Shop Sidebar </a>
+                                            <a href="{{ route('products.boys') }}" class="dropdown-item item-anchor">Đồ
+                                                bé trai </a>
                                         </li>
                                         <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Shop Three Column
+                                            <a href="{{ route('products.girls') }}" class="dropdown-item item-anchor">Đồ
+                                                bé gái
                                             </a>
                                         </li>
-                                        <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Shop Three Column
-                                                Wide </a>
-                                        </li>
-                                        <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Shop Four Column </a>
-                                        </li>
-                                        <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Shop Four Column Wide
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Shop Six Column </a>
-                                        </li>
-                                        <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Shop Six Column Wide
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Single Product </a>
-                                        </li>
-                                        <li>
-                                            <a href="index.html" class="dropdown-item item-anchor">Single Product V2
-                                            </a>
-                                        </li>
+
                                     </ul>
                                 </li>
-                                <li class="nav-item dropdown">
+                                {{-- <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="dropdownBlog"
                                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Blog</a>
                                     <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownBlog">
@@ -339,8 +343,8 @@
                                                 Sidebar </a>
                                         </li>
                                     </ul>
-                                </li>
-                                <li class="nav-item dropdown">
+                                </li> --}}
+                                {{-- <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="dropdownPages"
                                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</a>
                                     <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownPages">
@@ -375,12 +379,15 @@
                                             <a href="index.html" class="dropdown-item item-anchor">Wishlist </a>
                                         </li>
                                     </ul>
+                                </li> --}}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('purchase-history') }}">Lịch sử mua</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Blog</a>
+                                    <a class="nav-link" href="{{ route('promotions') }}">Khuyến mãi</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Contact</a>
+                                    <a class="nav-link" href="{{ route('contact') }}">Liên hệ</a>
                                 </li>
                             </ul>
                         </div>
@@ -390,26 +397,24 @@
                 <div class="col-3 col-lg-auto">
                     <ul class="list-unstyled d-flex m-0">
                         <li class="d-none d-lg-block">
-                            <a href="index.html" class="text-uppercase mx-3">Wishlist <span
+                            <a href="{{ route('wishlist') }}" class="text-uppercase mx-3">Yêu thích <span
                                     class="wishlist-count">(0)</span>
                             </a>
                         </li>
                         <li class="d-none d-lg-block">
-                            <a href="index.html" class="text-uppercase mx-3" data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">Cart <span
+                            <a href="{{ route('cart') }}" class="text-uppercase mx-3">Giỏ <span
                                     class="cart-count">(0)</span>
                             </a>
                         </li>
                         <li class="d-lg-none">
-                            <a href="#" class="mx-2">
+                            <a href="{{ route('wishlist') }}" class="mx-2">
                                 <svg width="24" height="24" viewBox="0 0 24 24">
                                     <use xlink:href="#heart"></use>
                                 </svg>
                             </a>
                         </li>
                         <li class="d-lg-none">
-                            <a href="#" class="mx-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
-                                aria-controls="offcanvasCart">
+                            <a href="{{ route('cart') }}" class="mx-2">
                                 <svg width="24" height="24" viewBox="0 0 24 24">
                                     <use xlink:href="#cart"></use>
                                 </svg>
@@ -421,6 +426,87 @@
                                     <use xlink:href="#search"></use>
                                 </svg>
                             </a>
+                        </li>
+                        <li class="nav-item dropdown mx-2">
+                            <a class="search-button dropdown-toggle" href="#" id="navbarUserDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false"
+                                style="text-decoration: none; color: inherit;">
+                                <svg width="24" height="24" viewBox="0 0 24 24">
+                                    <use xlink:href="#user"></use>
+                                </svg>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown"
+                                style="min-width: 200px;">
+                                @if(auth()->check())
+                                    <li>
+                                        <h6 class="dropdown-header">{{ auth()->user()->name }}</h6>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+                                                class="me-2">
+                                                <path
+                                                    d="M15.71 12.71a6 6 0 1 0-7.42 0a10 10 0 0 0-6.22 8.18a1 1 0 0 0 2 .22a8 8 0 0 1 15.9 0a1 1 0 0 0 1 .89h.11a1 1 0 0 0 .88-1.1a10 10 0 0 0-6.25-8.19ZM12 12a4 4 0 1 1 4-4a4 4 0 0 1-4 4Z">
+                                                </path>
+                                            </svg>
+                                            Hồ sơ cá nhân
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('purchase-history') }}">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+                                                class="me-2">
+                                                <path
+                                                    d="M3.977 9.84A2 2 0 0 1 5.971 8h12.058a2 2 0 0 1 1.994 1.84l.803 10A2 2 0 0 1 18.833 22H5.167a2 2 0 0 1-1.993-2.16l.803-10Z">
+                                                </path>
+                                            </svg>
+                                            Lịch sử mua hàng
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item"
+                                                style="border: none; background: none; cursor: pointer; width: 100%; text-align: left;">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" class="me-2">
+                                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                                </svg>
+                                                Đăng xuất
+                                            </button>
+                                        </form>
+                                    </li>
+                                @else
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('login') }}">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" class="me-2">
+                                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                                <polyline points="10 17 15 12 10 7"></polyline>
+                                                <line x1="15" y1="12" x2="3" y2="12"></line>
+                                            </svg>
+                                            Đăng nhập
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('register') }}">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+                                                class="me-2">
+                                                <path d="M19 11h-6V5h-2v6h-6v2h6v6h2v-6h6z"></path>
+                                            </svg>
+                                            Đăng ký
+                                        </a>
+                                    </li>
+                                @endif
+                            </ul>
                         </li>
                     </ul>
                 </div>

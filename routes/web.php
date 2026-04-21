@@ -12,6 +12,39 @@ Route::get('hello', function () {
     return view('layouts.hello');
 });
 
+// Pages routes
+Route::get('/products', function () {
+    return view('pages.products');
+})->name('products');
+
+Route::get('/products/boys', function () {
+    return view('pages.products-boys');
+})->name('products.boys');
+
+Route::get('/products/girls', function () {
+    return view('pages.products-girls');
+})->name('products.girls');
+
+Route::get('/purchase-history', function () {
+    return view('pages.purchase-history');
+})->name('purchase-history');
+
+Route::get('/promotions', function () {
+    return view('pages.promotions');
+})->name('promotions');
+
+Route::get('/contact', function () {
+    return view('pages.contact');
+})->name('contact');
+
+Route::get('/wishlist', function () {
+    return view('pages.wishlist');
+})->name('wishlist');
+
+Route::get('/cart', function () {
+    return view('pages.cart');
+})->name('cart');
+
 // Auth routes
 Route::middleware('guest')->group(function () {
     // Hiển thị form và xử lý Đăng ký

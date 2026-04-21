@@ -5,13 +5,11 @@
                 <div class="footer-menu footer-menu-001">
                     <div class="footer-intro mb-4">
                         <a href="index.html">
-                            <!-- Thay đổi đường dẫn ảnh Logo -->
                             <img src="{{ asset('images/main-logo.png') }}" alt="logo">
                         </a>
                     </div>
-                    <p>Gravida massa volutpat aenean odio. Amet, turpis erat nullam fringilla elementum diam in. Nisi,
-                        purus
-                        vitae, ultrices nunc. Sit ac sit suscipit hendrerit.</p>
+                    <p>Kaira tự hào mang đến những sản phẩm thời trang trẻ em an toàn, chất lượng và phong cách nhất.
+                        Luôn đồng hành cùng bé yêu trên mỗi chặng đường phát triển.</p>
                     <div class="social-links">
                         <ul class="list-unstyled d-flex flex-wrap gap-3">
                             <li>
@@ -55,59 +53,57 @@
             </div>
             <div class="col-md-3 col-sm-6">
                 <div class="footer-menu footer-menu-002">
-                    <h5 class="widget-title text-uppercase mb-4">Quick Links</h5>
+                    <h5 class="widget-title text-uppercase mb-4">Liên Kết Nhanh</h5>
                     <ul class="menu-list list-unstyled text-uppercase border-animation-left fs-6">
                         <li class="menu-item">
-                            <a href="index.html" class="item-anchor">Home</a>
+                            <a href="index.html" class="item-anchor">Trang Chủ</a>
                         </li>
                         <li class="menu-item">
-                            <a href="index.html" class="item-anchor">About</a>
+                            <a href="index.html" class="item-anchor">Sản phẩm</a>
                         </li>
                         <li class="menu-item">
-                            <a href="blog.html" class="item-anchor">Services</a>
+                            <a href="blog.html" class="item-anchor">Liên hệ</a>
                         </li>
                         <li class="menu-item">
-                            <a href="styles.html" class="item-anchor">Single item</a>
+                            <a href="styles.html" class="item-anchor">Khuyến Mãi</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#" class="item-anchor">Contact</a>
+                            <a href="#" class="item-anchor">Góc Của Mẹ</a>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">
                 <div class="footer-menu footer-menu-003">
-                    <h5 class="widget-title text-uppercase mb-4">Help & Info</h5>
+                    <h5 class="widget-title text-uppercase mb-4">Chăm Sóc Khách Hàng</h5>
                     <ul class="menu-list list-unstyled text-uppercase border-animation-left fs-6">
                         <li class="menu-item">
-                            <a href="#" class="item-anchor">Track Your Order</a>
+                            <a href="#" class="item-anchor">Tra Cứu Đơn Hàng</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#" class="item-anchor">Returns + Exchanges</a>
+                            <a href="#" class="item-anchor">Chính Sách Đổi Trả</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#" class="item-anchor">Shipping + Delivery</a>
+                            <a href="#" class="item-anchor">Chính Sách Giao Hàng</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#" class="item-anchor">Contact Us</a>
+                            <a href="#" class="item-anchor">Liên Hệ Hỗ Trợ</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#" class="item-anchor">Find us easy</a>
+                            <a href="#" class="item-anchor">Hệ Thống Cửa Hàng</a>
                         </li>
                         <li class="menu-item">
-                            <a href="index.html" class="item-anchor">Faqs</a>
+                            <a href="index.html" class="item-anchor">Câu Hỏi Thường Gặp</a>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">
                 <div class="footer-menu footer-menu-004 border-animation-left">
-                    <h5 class="widget-title text-uppercase mb-4">Contact Us</h5>
-                    <p>Do you have any questions or suggestions? <a href="mailto:contact@yourcompany.com"
-                            class="item-anchor">contact@yourcompany.com</a></p>
-                    <p>Do you need support? Give us a call. <a href="tel:+43 720 11 52 78" class="item-anchor">+43 720
-                            11 52
-                            78</a>
+                    <h5 class="widget-title text-uppercase mb-4">Liên Hệ</h5>
+                    <p>Bạn có câu hỏi hoặc cần tư vấn chọn size cho bé? <br><a href="mailto:cskh@bluevn.com"
+                            class="item-anchor">cskh@bluevn.com</a></p>
+                    <p>Hotline hỗ trợ trực tuyến 24/7. <br><a href="tel:0912345678" class="item-anchor">0912 345 678</a>
                     </p>
                 </div>
             </div>
@@ -118,30 +114,26 @@
             <div class="row">
                 <div class="col-md-6 d-flex flex-wrap">
                     <div class="shipping">
-                        <span>We ship with:</span>
-                        <!-- Thay đổi đường dẫn ảnh Icon -->
+                        <span>Đơn vị vận chuyển:</span>
                         <img src="{{ asset('images/arct-icon.png') }}" alt="icon">
                         <img src="{{ asset('images/dhl-logo.png') }}" alt="icon">
                     </div>
                     <div class="payment-option">
-                        <span>Payment Option:</span>
-                        <!-- Thay đổi đường dẫn ảnh Card -->
+                        <span>Phương thức thanh toán:</span>
                         <img src="{{ asset('images/visa-card.png') }}" alt="card">
                         <img src="{{ asset('images/paypal-card.png') }}" alt="card">
                         <img src="{{ asset('images/master-card.png') }}" alt="card">
                     </div>
                 </div>
                 <div class="col-md-6 text-end">
-                    <p>© Copyright 2022 Kaira. All rights reserved. Design by <a href="https://templatesjungle.com"
-                            target="_blank">TemplatesJungle</a> Distribution By <a href="https://themewagon.com"
-                            target="blank">ThemeWagon</a></p>
+                    <p>© Bản quyền 2026 thuộc về hệ thống thời trang trẻ em BlueVn. Thiết kế và phát triển bởi <a
+                            href="#" target="_blank">Nhóm Đồ Án</a>.</p>
                 </div>
             </div>
         </div>
     </div>
 </footer>
 
-<!-- CÁC FILE JS ĐÃ ĐƯỢC BỌC HÀM ASSET() -->
 <script src="{{ asset('js/jquery.min.js') }}"></script>
 <script src="{{ asset('js/plugins.js') }}"></script>
 <script src="{{ asset('js/SmoothScroll.js') }}"></script>
