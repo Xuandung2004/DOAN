@@ -11,6 +11,10 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CouponController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReviewController;
 
 // Giỏ hàng
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
@@ -39,9 +43,6 @@ Route::get('/products', [ProductController::class, 'shop'])->name('products');
 // 2. Trang chi tiết 1 sản phẩm
 Route::get('/product/{slug}', [ProductController::class, 'detail'])->name('product.detail');
 // Pages routes
-Route::get('/purchase-history', function () {
-    return view('pages.purchase-history');
-})->name('purchase-history');
 
 Route::get('/promotions', function () {
     return view('pages.promotions');
@@ -72,8 +73,6 @@ Route::middleware('guest')->group(function () {
 // AUTHENTICATED USER ROUTES
 // ==========================================
 Route::middleware('auth')->group(function () {
-    // Xử lý Đăng xuất (Bắt buộc dùng POST để bảo mật)
-    Route::middleware('auth')->group(function () {
     // Xử lý Đăng xuất (Giữ nguyên của ông bạn)
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
@@ -85,17 +84,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/history', [OrderController::class, 'history'])->name('orders.history');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
     Route::put('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
-});
+    // Đánh giá sản phẩm
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+
 });
 
 // ==========================================
 // ADMIN ROUTES
 // ==========================================
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::middleware(['auth'])->prefix('admin')->group(function () {
+    // Trang thống kê báo cáo
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
 // Quản lý người dùng: Dùng resource nhưng BỎ QUA hàm show và destroy (vì mình không dùng)
     Route::resource('users', UserController::class)->except(['show', 'destroy']);
 // Route Custom để Khóa / Mở khóa tài khoản (thay thế cho việc xóa cứng)
-    Route::put('users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    Route::put('users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
 
 // Quản lý sản phẩm
     
@@ -110,10 +113,6 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     // 3. Route để xóa 1 ảnh cụ thể của sản phẩm
     Route::delete('products/image/{id}', [ProductController::class, 'destroyImage'])
         ->name('products.destroyImage');
-    // index admin
-    Route::get('/', function () {
-        return view('admin.index');
-    })->name('admin.index');
 
     // Quản lý người dùng
     // Route::resource('users', UserController::class);
@@ -123,4 +122,12 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/orders', [OrderController::class, 'adminIndex'])->name('admin.orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'adminShow'])->name('admin.orders.show');
     Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+
+    // Quản lý danh mục
+    Route::resource('categories', CategoryController::class)->except(['show']);
+    // Quản lý mã giảm giá
+    Route::resource('coupons', CouponController::class)->except(['show', 'destroy']);
+    // Quản lý đánh giá
+    Route::get('/reviews', [ReviewController::class, 'adminIndex'])->name('admin.reviews.index');
+    Route::delete('/reviews/{id}', [ReviewController::class, 'destroy'])->name('admin.reviews.destroy');
 });

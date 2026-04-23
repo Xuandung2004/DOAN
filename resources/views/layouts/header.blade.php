@@ -392,7 +392,7 @@
                                     </ul>
                                 </li> --}}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('purchase-history') }}">Lịch sử mua</a>
+                                    <a class="nav-link" href="{{ route('orders.history') }}">Lịch sử mua</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('promotions') }}">Khuyến mãi</a>
@@ -497,7 +497,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="{{ route('purchase-history') }}">
+                                        <a class="dropdown-item" href="{{ route('orders.history') }}">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
                                                 class="me-2">
                                                 <path

@@ -104,7 +104,23 @@
 
         <div class="row mt-5 bg-white p-4 rounded shadow-sm">
             <div class="col-12">
-                <h4 class="fw-bold mb-4 border-bottom pb-2">Đánh giá sản phẩm</h4>
+                <h4 class="fw-bold mb-4 border-bottom pb-2">Đánh giá sản phẩm ({{ $product->reviews->count() }})</h4>
+
+                @if(session('thongbao'))
+                    <div class="alert alert-success shadow-sm">
+                        <i class="fas fa-check-circle me-2"></i>{{ session('thongbao') }}
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger shadow-sm">
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <div class="reviews-list mb-5">
                     @if($product->reviews->count() > 0)
@@ -117,30 +133,35 @@
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <h6 class="fw-bold mb-1">{{ $review->user->hoten ?? 'Khách hàng' }}</h6>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="fw-bold mb-1">{{ $review->user->hoten ?? 'Khách hàng' }}</h6>
+                                        <small class="text-muted">{{ $review->ngaytao->diffForHumans() }}</small>
+                                    </div>
                                     <div class="text-warning small mb-2">
                                         @for($i = 1; $i <= 5; $i++)
                                             <i class="fa{{ $i <= $review->sosao ? 's' : 'r' }} fa-star"></i>
                                         @endfor
                                     </div>
                                     <p class="text-secondary mb-1">{{ $review->binhluan }}</p>
-                                    <small class="text-muted">{{ $review->ngaytao->format('d/m/Y H:i') }}</small>
                                 </div>
                             </div>
                         @endforeach
                     @else
-                        <p class="text-muted fst-italic">Chưa có đánh giá nào cho sản phẩm này.</p>
+                        <p class="text-muted fst-italic">Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá sản phẩm này!
+                        </p>
                     @endif
                 </div>
 
-                <div class="write-review-box bg-light p-4 rounded">
+                <div class="write-review-box bg-light p-4 rounded border">
                     <h5 class="fw-bold mb-3">Viết đánh giá của bạn</h5>
                     @auth
-                        <form action="#" method="POST">
+                        <form action="{{ route('reviews.store') }}" method="POST">
                             @csrf
+                            <input type="hidden" name="sanphamID" value="{{ $product->id }}">
+
                             <div class="mb-3 d-flex align-items-center">
                                 <label class="me-3 fw-bold">Chất lượng:</label>
-                                <select name="sosao" class="form-select w-auto">
+                                <select name="sosao" class="form-select w-auto" required>
                                     <option value="5">5 Sao (Tuyệt vời)</option>
                                     <option value="4">4 Sao (Tốt)</option>
                                     <option value="3">3 Sao (Bình thường)</option>
@@ -152,10 +173,10 @@
                                 <textarea name="binhluan" class="form-control" rows="4"
                                     placeholder="Chia sẻ cảm nhận của bạn về sản phẩm này..." required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">Gửi đánh giá</button>
                         </form>
                     @else
-                        <div class="alert alert-warning border-0">
+                        <div class="alert alert-warning border-0 mb-0">
                             Vui lòng <a href="{{ route('login') }}" class="fw-bold text-decoration-none">Đăng nhập</a> để có
                             thể gửi đánh giá cho sản phẩm này.
                         </div>
@@ -167,12 +188,10 @@
 </section>
 
 <script>
-    // Hàm đổi ảnh to khi click vào ảnh nhỏ
     function changeMainImage(imgUrl) {
         document.getElementById('mainProductImage').src = imgUrl;
     }
 
-    // Hàm tăng giảm số lượng
     const qtyInput = document.getElementById('qtyInput');
     const maxQty = parseInt(qtyInput.getAttribute('max'));
 
@@ -189,12 +208,11 @@
             qtyInput.value = currentVal - 1;
         }
     }
+
     function toggleWishlist(button) {
         let productId = button.getAttribute('data-id');
-        // Lấy chìa khóa bảo mật CSRF của Laravel
         let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        // Gửi yêu cầu ngầm về Server (Bếp)
         fetch('{{ route('wishlist.toggle') }}', {
             method: 'POST',
             headers: {
@@ -206,7 +224,6 @@
         })
             .then(response => {
                 if (response.status === 401) {
-                    // Khách chưa đăng nhập -> Đuổi ra trang Login
                     alert('Vui lòng đăng nhập để sử dụng chức năng này!');
                     window.location.href = '{{ route('login') }}';
                     throw new Error('Not logged in');
@@ -214,28 +231,23 @@
                 return response.json();
             })
             .then(data => {
-                // Cập nhật lại giao diện ngay lập tức mà không cần F5
                 let icon = button.querySelector('.wishlist-icon');
                 let text = button.querySelector('.wishlist-text');
 
                 if (data.status === 'added') {
                     icon.classList.remove('far');
-                    icon.classList.add('fas', 'text-danger'); // Tô màu đỏ
+                    icon.classList.add('fas', 'text-danger');
                     text.innerText = 'Đã yêu thích';
-                    document.getElementById('wishlistItemCount').innerText = currentCount + 1;
                 } else if (data.status === 'removed') {
-                    icon.classList.remove('fas', 'text-danger'); // Bỏ màu đỏ
+                    icon.classList.remove('fas', 'text-danger');
                     icon.classList.add('far');
                     text.innerText = 'Thêm vào yêu thích';
-                    document.getElementById('wishlistItemCount').innerText = currentCount - 1;
                 }
-
-                // Hiện thông báo nhỏ (Tương lai ông bạn có thể dùng thư viện SweetAlert2 cho đẹp)
                 alert(data.message);
             })
             .catch(error => console.error('Error:', error));
     }
-    // Thêm vào giỏ hàng bằng AJAX
+
     function addToCart() {
         let productId = document.getElementById('sanphamID').value;
         let quantity = document.getElementById('qtyInput').value;
@@ -263,15 +275,13 @@
             })
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message); // Hiển thị thành công
-                    // Tương lai ông bạn có thể dùng JS update con số trên cái icon Giỏ hàng ở Header:
-                    // document.getElementById('cartItemCount').innerText = data.totalItems;
+                    alert(data.message);
                     let cartBadge = document.getElementById('cartItemCount');
                     if (cartBadge) {
                         cartBadge.innerText = data.totalItems;
                     }
                 } else {
-                    alert(data.message); // Hiển thị lỗi (ví dụ: Hết hàng)
+                    alert(data.message);
                 }
             })
             .catch(error => console.error('Error:', error));

@@ -1,6 +1,6 @@
 @include('layouts.header')
 
-<section id="purchase-history" class="py-5">
+<section id="orders.history" class="py-5">
     <div class="container">
         <div class="row">
             <div class="col-12">

@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
 
         $user = $request->user();
         // Kiểm tra trạng thái tài khoản
-if ($user->trangthai == 0) {
+    if ($user->trangthai == 0) {
     Auth::logout();
     return back()->withErrors(['email' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Admin.']);
 }
@@ -38,11 +38,12 @@ if ($user->trangthai == 0) {
         if ($user->vaitro == 1) {
             // Nếu là Admin -> Đá thẳng vào trang Dashboard của Admin
             // (Đảm bảo route 'admin.dashboard' đã được khai báo trong web.php giống bài trước)
-            return redirect()->route('admin.dashboard'); 
+            return redirect()->route('admin.index'); 
         }
 
         // Nếu là Khách hàng bình thường (vaitro = 0) -> Trả về trang chủ hoặc trang họ định vào
         return redirect()->intended('/');
+        
     }
 
     /**
