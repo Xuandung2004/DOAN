@@ -9,12 +9,18 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
 
 // Giỏ hàng
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 
+
+// Thanh toán (Checkout)
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
 
 // Gọi bằng phương thức POST để bảo mật (Không để trong middleware auth vì JS sẽ tự bắt lỗi báo cho người dùng)
 Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
@@ -23,9 +29,6 @@ Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
 Route::get('/', function () {
     return view('layouts.home');
 })->name('home');
-Route::get('hello', function () {
-    return view('layouts.hello');
-});
 
 // ==========================================
 // PRODUCT ROUTES (FRONTEND)
@@ -78,6 +81,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserController::class, 'profile'])->name('profile.edit');
     Route::patch('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
     // Bỏ route delete profile đi vì E-commerce không nên cho khách tự xóa sạch tài khoản
+    // Quan lý đơn hàng của khách
+    Route::get('/orders/history', [OrderController::class, 'history'])->name('orders.history');
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::put('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 });
 });
 
@@ -109,6 +116,11 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     })->name('admin.index');
 
     // Quản lý người dùng
-    Route::resource('users', UserController::class);
-    Route::put('users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
+    // Route::resource('users', UserController::class);
+    // Route::put('users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
+
+    // Quản lý đơn hàng
+    Route::get('/orders', [OrderController::class, 'adminIndex'])->name('admin.orders.index');
+    Route::get('/orders/{id}', [OrderController::class, 'adminShow'])->name('admin.orders.show');
+    Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
 });
