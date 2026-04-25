@@ -18,6 +18,8 @@ class Order extends Model
 
     protected $fillable = [
         'nguoidungID',
+        'tennguoinhan',    // <-- THÊM MỚI
+        'sodienthoai',     // <-- THÊM MỚI
         'tongtien',
         'diachigiaohang',
         'phuongthucthanhtoan',
@@ -29,6 +31,8 @@ class Order extends Model
 
     protected array $attributeAliases = [
         'user_id' => 'nguoidungID',
+        'receiver_name' => 'tennguoinhan',  // <-- THÊM MỚI
+        'receiver_phone' => 'sodienthoai',  // <-- THÊM MỚI
         'total_price' => 'tongtien',
         'shipping_address' => 'diachigiaohang',
         'payment_method' => 'phuongthucthanhtoan',

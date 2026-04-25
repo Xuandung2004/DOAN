@@ -104,7 +104,8 @@
 
         <div class="row mt-5 bg-white p-4 rounded shadow-sm">
             <div class="col-12">
-                <h4 class="fw-bold mb-4 border-bottom pb-2">Đánh giá sản phẩm ({{ $product->reviews->count() }})</h4>
+                <h4 class="fw-bold mb-4 border-bottom pb-2">Đánh giá sản phẩm (<span
+                        id="review-total-count">{{ $product->reviews->count() }}</span>)</h4>
 
                 @if(session('thongbao'))
                     <div class="alert alert-success shadow-sm">
@@ -155,7 +156,7 @@
                 <div class="write-review-box bg-light p-4 rounded border">
                     <h5 class="fw-bold mb-3">Viết đánh giá của bạn</h5>
                     @auth
-                        <form action="{{ route('reviews.store') }}" method="POST">
+                        <form id="review-form" onsubmit="submitReview(event)">
                             @csrf
                             <input type="hidden" name="sanphamID" value="{{ $product->id }}">
 
@@ -292,6 +293,105 @@
                 }
             })
             .catch(error => console.error('Error:', error));
+    }
+
+    // Hàm gửi đánh giá
+    function submitReview(event) {
+        // 1. Chặn trình duyệt load lại trang khi bấm submit
+        event.preventDefault();
+
+        let form = document.getElementById('review-form');
+        let formData = new FormData(form); // Tự động gom hết dữ liệu trong form
+        let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        let submitBtn = form.querySelector('button[type="submit"]');
+
+        // Khóa nút để tránh khách spam click nhiều lần
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Đang gửi...';
+
+        fetch('{{ route('reviews.store') }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': token,
+                'Accept': 'application/json' // Bắt buộc để Laravel biết đây là AJAX
+            },
+            body: formData
+        })
+            .then(async response => {
+                const data = await response.json();
+
+                // Xử lý nếu Laravel báo lỗi (vd: lỗi Validate, bỏ trống form...)
+                if (!response.ok) {
+                    let errorMsg = data.message;
+                    if (data.errors) {
+                        errorMsg = Object.values(data.errors)[0][0]; // Lấy lỗi đầu tiên
+                    }
+                    throw new Error(errorMsg);
+                }
+                return data;
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    showGlobalToast(data.message);
+                    form.reset();
+
+                    // --- ĐOẠN MỚI: VẼ BÌNH LUẬN RA MÀN HÌNH ---
+                    let reviewsList = document.querySelector('.reviews-list');
+
+                    // 1. Nếu đang có dòng "Chưa có đánh giá nào", xóa nó đi
+                    let emptyMsg = reviewsList.querySelector('.fst-italic');
+                    if (emptyMsg) emptyMsg.remove();
+
+                    // 2. Tạo đoạn HTML số sao vàng
+                    let starsHtml = '';
+                    for (let i = 1; i <= 5; i++) {
+                        starsHtml += i <= data.review_data.sosao
+                            ? '<i class="fas fa-star"></i> '
+                            : '<i class="far fa-star"></i> ';
+                    }
+
+                    // 3. Lắp ghép HTML y hệt giao diện cũ
+                    let newReviewHtml = `
+                    <div class="d-flex mb-4 border-bottom pb-3" style="animation: fadeIn 0.5s ease-in-out;">
+                        <div class="me-3">
+                            <div class="bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center text-uppercase"
+                                style="width: 50px; height: 50px; font-size: 20px;">
+                                ${data.review_data.chucai_dau}
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="fw-bold mb-1">${data.review_data.hoten}</h6>
+                                <small class="text-muted text-success fw-bold">${data.review_data.thoigian}</small>
+                            </div>
+                            <div class="text-warning small mb-2">
+                                ${starsHtml}
+                            </div>
+                            <p class="text-secondary mb-1">${data.review_data.binhluan}</p>
+                        </div>
+                    </div>
+                `;
+
+                    // 4. Chèn cục HTML mới lên đầu danh sách
+                    reviewsList.insertAdjacentHTML('afterbegin', newReviewHtml);
+
+                    // 5. Cập nhật con số đếm (Ví dụ: Đánh giá sản phẩm (1) -> (2))
+                    let countSpan = document.getElementById('review-total-count');
+                    if (countSpan) {
+                        countSpan.innerText = parseInt(countSpan.innerText) + 1;
+                    }
+                    // ------------------------------------------
+                }
+            })
+            .catch(error => {
+                // Báo lỗi bằng Toast đỏ
+                showGlobalToast(error.message || 'Có lỗi xảy ra, vui lòng thử lại!', 'error');
+            })
+            .finally(() => {
+                // Dù thành công hay thất bại cũng mở khóa lại nút bấm
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Gửi đánh giá';
+            });
     }
 </script>
 

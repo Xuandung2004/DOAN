@@ -17,24 +17,39 @@ class ReviewController extends Controller
         $request->validate([
             'sanphamID' => 'required|exists:sanpham,id',
             'sosao' => 'required|integer|min:1|max:5',
-            'binhluan' => 'required|string|max:1000', // Đã đổi thành binhluan
+            'binhluan' => 'required|string|max:1000',
         ], [
             'sosao.required' => 'Vui lòng chọn số sao đánh giá.',
             'binhluan.required' => 'Vui lòng nhập nội dung bình luận.'
         ]);
 
-        // 1. Lưu đánh giá vào bảng DANH_GIA
-        Review::create([
+        // 1. Lưu đánh giá
+        $review = Review::create([
             'nguoidungID' => Auth::id(),
             'sanphamID' => $request->sanphamID,
             'sosao' => $request->sosao,
-            'binhluan' => $request->binhluan, // Đã đổi thành binhluan
+            'binhluan' => $request->binhluan,
         ]);
 
-        // 2. Tự động tính toán và cập nhật lại điểm trung bình của Sản phẩm
+        $review->load('user');
+        $tenNguoiDung = $review->user->hoten ?? 'Khách hàng';
+        $chuCaiDau = strtoupper(substr($tenNguoiDung, 0, 1));
+        // 2. Cập nhật điểm trung bình
         $this->updateProductAverageRating($request->sanphamID);
 
-        return back()->with('thongbao', 'Thêm đánh giá thành công! Cảm ơn bạn đã góp ý.');
+        // --- ĐOẠN SỬA: TRẢ VỀ JSON THAY VÌ BACK() ---
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Thêm đánh giá thành công! Cảm ơn bạn đã góp ý.',
+            'review_data' => [
+                'hoten' => $tenNguoiDung,
+                'chucai_dau' => $chuCaiDau,
+                'sosao' => $request->sosao,
+                'binhluan' => $request->binhluan,
+                'thoigian' => 'Vừa xong'
+            ]
+        ]);
+        // ---------------------------------------------
     }
 
 

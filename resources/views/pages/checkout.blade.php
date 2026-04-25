@@ -18,7 +18,7 @@
             </div>
         @endif
 
-        <form action="{{ route('checkout.placeOrder') }}" method="POST">
+        <form id="checkout-form" onsubmit="submitCheckout(event)">
             @csrf
 
             <div class="row">
@@ -29,6 +29,26 @@
                             <h5 class="card-title fw-bold mb-4 border-bottom pb-2">
                                 <i class="fas fa-map-marker-alt text-primary me-2"></i> Thông tin giao hàng
                             </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="tennguoinhan" class="form-label fw-bold">Họ tên người nhận <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="tennguoinhan" name="tennguoinhan"
+                                        placeholder="Nhập họ tên..."
+                                        value="{{ old('tennguoinhan', Auth::user()->hoten ?? Auth::user()->name ?? Auth::user()->ten ?? '') }}"
+                                        required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="sodienthoai" class="form-label fw-bold">Số điện thoại <span
+                                            class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control" id="sodienthoai" name="sodienthoai"
+                                        placeholder="Nhập số điện thoại..."
+                                        value="{{ old('sodienthoai', Auth::user()->sodienthoai ?? Auth::user()->phone ?? '') }}"
+                                        required>
+                                </div>
+                            </div>
 
                             <div class="mb-3">
                                 <label for="diachigiaohang" class="form-label fw-bold">Địa chỉ nhận hàng chi tiết <span
@@ -75,21 +95,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body p-4">
-                            <h5 class="card-title fw-bold mb-3 border-bottom pb-2">
-                                <i class="fas fa-ticket-alt text-warning me-2"></i> Áp dụng Mã giảm giá
-                            </h5>
-                            <div class="input-group mb-2">
-                                <input type="text" class="form-control border-secondary" name="magiamgia"
-                                    placeholder="Nhập mã ưu đãi (nếu có)..." value="{{ old('magiamgia') }}">
-                            </div>
-                            <small class="text-danger fst-italic">* Hệ thống sẽ tự động tính toán mã giảm giá khi bạn
-                                bấm Đặt hàng.</small>
-                        </div>
-                    </div>
-
                 </div>
 
                 <div class="col-lg-4">
@@ -129,6 +134,13 @@
                                 <span class="fw-bold text-dark">{{ number_format($phiVanChuyen, 0, ',', '.') }}đ</span>
                             </div>
 
+                            @if($soTienGiam > 0)
+                                <div class="d-flex justify-content-between mb-3 text-success">
+                                    <span>Giảm giá ({{ $maGiamGia }}):</span>
+                                    <span class="fw-bold">-{{ number_format($soTienGiam, 0, ',', '.') }}đ</span>
+                                </div>
+                            @endif
+
                             <div class="d-flex justify-content-between align-items-center mb-4 mt-2 border-top pt-3">
                                 <span class="fs-6 fw-bold">Tổng thanh toán:</span>
                                 <span
@@ -139,16 +151,16 @@
                                 <i class="fas fa-check-circle me-2"></i> XÁC NHẬN ĐẶT HÀNG
                             </button>
 
-                            <a href="{{ route('cart.index') }}"
-                                class="btn btn-outline-secondary w-100 text-decoration-none">
+                            <a href="{{ route('cart') }}" class="btn btn-outline-secondary w-100 text-decoration-none">
                                 <i class="fas fa-arrow-left me-2"></i> Quay lại giỏ hàng
                             </a>
                         </div>
                     </div>
+
+                    <input type="hidden" name="magiamgia" value="{{ old('magiamgia', $maGiamGia) }}">
                 </div>
             </div>
         </form>
-
     </div>
 </section>
 
@@ -166,10 +178,83 @@
         transition: all 0.3s ease;
     }
 
-    /* Chỉnh màu khi Radio được check */
     .form-check-input:checked+label {
         color: #0d6efd;
     }
 </style>
+<script>
+    function submitCheckout(event) {
+        event.preventDefault(); // Chặn trình duyệt load lại trang
+
+        let form = document.getElementById('checkout-form');
+        let formData = new FormData(form);
+
+        // CẢI TIẾN 1: Lấy Token thẳng từ thẻ @csrf bên trong form cho chắc ăn 100%
+        let tokenInput = form.querySelector('input[name="_token"]');
+        let token = tokenInput ? tokenInput.value : '';
+
+        let submitBtn = form.querySelector('button[type="submit"]');
+
+        // Hiệu ứng nút bấm
+        submitBtn.disabled = true;
+        let originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> ĐANG XỬ LÝ...';
+
+        fetch('{{ route("checkout.placeOrder") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': token,
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+            .then(response => {
+                // CẢI TIẾN 2: Bắt dữ liệu chuẩn để không bị lỗi async/await ở trình duyệt cũ
+                return response.json().then(data => ({
+                    status: response.status,
+                    ok: response.ok,
+                    body: data
+                }));
+            })
+            .then(res => {
+                let data = res.body;
+
+                // Xử lý nếu Controller báo lỗi Validate
+                if (!res.ok) {
+                    let errorMsg = data.message || 'Có lỗi xảy ra!';
+                    if (data.errors) {
+                        errorMsg = Object.values(data.errors)[0][0]; // Lấy lỗi đầu tiên
+                    }
+                    throw new Error(errorMsg);
+                }
+
+                // Nếu thành công
+                if (data.status === 'success') {
+                    if (typeof showGlobalToast === 'function') {
+                        showGlobalToast(data.message);
+                    } else {
+                        alert(data.message);
+                    }
+
+                    // Chuyển trang
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url;
+                    }, 1500);
+                }
+            })
+            .catch(error => {
+                // Báo lỗi bằng Toast đỏ
+                if (typeof showGlobalToast === 'function') {
+                    showGlobalToast(error.message, 'error');
+                } else {
+                    alert(error.message);
+                }
+
+                // Mở khóa lại nút
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            });
+    }
+</script>
 
 @include('layouts.footer')
