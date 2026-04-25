@@ -199,9 +199,9 @@
 
     <div class="search-popup">
         <div class="search-popup-container">
-            <form role="search" method="get" class="form-group" action="">
+            <form role="search" method="get" class="form-group" action="{{ route('products') }}">
                 <input type="search" id="search-form" class="form-control border-0 border-bottom"
-                    placeholder="Type and press enter" value="" name="s" />
+                    placeholder="Nhập tên sản phẩm..." value="{{ request('timkiem') }}" name="timkiem" required />
                 <button type="submit" class="search-submit border-0 position-absolute bg-white"
                     style="top: 15px;right: 15px;">
                     <svg class="search" width="24" height="24">
@@ -469,8 +469,8 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown mx-2">
-                            <a class="search-button dropdown-toggle" href="#" id="navbarUserDropdown" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false"
+                            <a class="dropdown-toggle" href="{{ route('profile.edit') }}" id="navbarUserDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false"
                                 style="text-decoration: none; color: inherit;">
                                 <svg width="24" height="24" viewBox="0 0 24 24">
                                     <use xlink:href="#user"></use>

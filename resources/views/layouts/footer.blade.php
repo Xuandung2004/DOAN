@@ -126,8 +126,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 text-end">
-                    <p>© Bản quyền 2026 thuộc về hệ thống thời trang trẻ em BlueVn. Thiết kế và phát triển bởi <a
-                            href="#" target="_blank">Nhóm Đồ Án</a>.</p>
+                    <p>© Bản quyền 2026 thuộc về hệ thống thời trang trẻ em KAIRA </p>
                 </div>
             </div>
         </div>

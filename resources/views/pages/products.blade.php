@@ -5,16 +5,26 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1 class="section-title text-center mb-5" data-aos="fade-up">Tất cả sản phẩm</h1>
+                <h1 class="section-title text-center mb-5" data-aos="fade-up">
+                    @if(request()->has('timkiem') && request('timkiem') != '')
+                        Kết quả tìm kiếm: "<span class="text-primary">{{ request('timkiem') }}</span>"
+                    @else
+                        Tất cả sản phẩm
+                    @endif
+                </h1>
             </div>
         </div>
 
         <div class="row mb-5" data-aos="fade-up" data-aos-delay="100">
             <div class="col-12 text-center">
-                <a href="{{ route('products') }}" class="btn btn-link text-decoration-none me-3 fw-bold">Tất cả</a>
+                <a href="{{ route('products', request()->except('danhmuc')) }}"
+                    class="btn btn-link text-decoration-none me-3 px-1 {{ !request('danhmuc') ? 'fw-bold text-dark border-bottom border-2 border-dark pb-1' : 'text-muted' }}">
+                    Tất cả
+                </a>
+
                 @foreach($danhmucs as $dm)
-                    <a href="{{ route('products', ['danhmuc' => $dm->id]) }}"
-                        class="btn btn-link text-decoration-none me-3">
+                    <a href="{{ route('products', array_merge(request()->query(), ['danhmuc' => $dm->id])) }}"
+                        class="btn btn-link text-decoration-none me-3 px-1 {{ request('danhmuc') == $dm->id ? 'fw-bold text-dark border-bottom border-2 border-dark pb-1' : 'text-muted' }}">
                         {{ $dm->ten }}
                     </a>
                 @endforeach
