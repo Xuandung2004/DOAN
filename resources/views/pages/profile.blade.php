@@ -1,271 +1,206 @@
 @include('layouts.header')
 
-<section id="profile" class="py-5">
+<section id="profile" class="py-5 bg-light">
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1 class="section-title text-center mb-5" data-aos="fade-up">Thông tin cá nhân</h1>
+                <h1 class="section-title text-center mb-5" data-aos="fade-up">Hồ sơ cá nhân</h1>
             </div>
         </div>
 
         <div class="row">
-            <!-- Sidebar -->
             <div class="col-lg-3 mb-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body text-center">
                         <div class="mb-4">
-                            <img src="https://via.placeholder.com/120" alt="Avatar" class="rounded-circle"
-                                style="width: 120px; height: 120px; object-fit: cover;">
+                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center mx-auto"
+                                style="width: 120px; height: 120px; font-size: 48px; font-weight: bold;">
+                                {{ substr($user->hoten ?? 'U', 0, 1) }}
+                            </div>
                         </div>
-                        <h5 class="card-title mb-1">{{ auth()->user()->name }}</h5>
-                        <p class="text-muted small mb-4">{{ auth()->user()->email }}</p>
-                        <button class="btn btn-outline-secondary w-100 mb-2">Thay đổi ảnh</button>
+                        <h5 class="card-title mb-1 fw-bold">{{ $user->hoten }}</h5>
+                        <p class="text-muted small mb-4">{{ $user->email }}</p>
                     </div>
                 </div>
 
                 <div class="list-group mt-4 sticky-top" style="top: 20px;">
                     <a href="#thong-tin" class="list-group-item list-group-item-action active profile-tab-btn"
                         data-tab="thong-tin">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="me-2">
-                            <path
-                                d="M15.71 12.71a6 6 0 1 0-7.42 0a10 10 0 0 0-6.22 8.18a1 1 0 0 0 2 .22a8 8 0 0 1 15.9 0a1 1 0 0 0 1 .89h.11a1 1 0 0 0 .88-1.1a10 10 0 0 0-6.25-8.19ZM12 12a4 4 0 1 1 4-4a4 4 0 0 1-4 4Z">
-                            </path>
-                        </svg>
-                        Thông tin tài khoản
-                    </a>
-                    <a href="#dia-chi" class="list-group-item list-group-item-action profile-tab-btn"
-                        data-tab="dia-chi">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" class="me-2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        Địa chỉ giao hàng
+                        <i class="fas fa-user me-2"></i> Thông tin & Địa chỉ
                     </a>
                     <a href="#mat-khau" class="list-group-item list-group-item-action profile-tab-btn"
                         data-tab="mat-khau">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="me-2">
-                            <path
-                                d="M19 8h-1V6a6 6 0 0 0-12 0v2H5a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V11a3 3 0 0 0-3-3zm-7 8a2 2 0 1 1 2-2a2 2 0 0 1-2 2zm4-9H8V6a4 4 0 0 1 8 0z">
-                            </path>
-                        </svg>
-                        Thay đổi mật khẩu
+                        <i class="fas fa-lock me-2"></i> Thay đổi mật khẩu
                     </a>
                     <a href="#don-hang" class="list-group-item list-group-item-action profile-tab-btn"
                         data-tab="don-hang">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="me-2">
-                            <path
-                                d="M3.977 9.84A2 2 0 0 1 5.971 8h12.058a2 2 0 0 1 1.994 1.84l.803 10A2 2 0 0 1 18.833 22H5.167a2 2 0 0 1-1.993-2.16l.803-10Z">
-                            </path>
-                        </svg>
-                        Đơn hàng của tôi
+                        <i class="fas fa-shopping-bag me-2 px-1"></i> Lịch sử đơn hàng
                     </a>
+
+                    <form action="{{ route('logout') }}" method="POST" class="mt-2">
+                        @csrf
+                        <button type="submit"
+                            class="list-group-item list-group-item-action text-danger fw-bold w-100 text-start">
+                            <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+                        </button>
+                    </form>
                 </div>
             </div>
 
-            <!-- Content -->
             <div class="col-lg-9">
-                <!-- Thông tin tài khoản -->
-                <div id="thong-tin" class="tab-pane active show">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-light border-bottom">
-                            <h5 class="mb-0">Thông tin tài khoản</h5>
-                        </div>
-                        <div class="card-body">
-                            <form>
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Họ và tên</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" value="{{ auth()->user()->name }}"
-                                            placeholder="Họ và tên">
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Email</label>
-                                    <div class="col-sm-9">
-                                        <input type="email" class="form-control" value="{{ auth()->user()->email }}"
-                                            placeholder="Email">
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Số điện thoại</label>
-                                    <div class="col-sm-9">
-                                        <input type="tel" class="form-control" value="0901 234 567"
-                                            placeholder="Số điện thoại">
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Ngày sinh</label>
-                                    <div class="col-sm-9">
-                                        <input type="date" class="form-control" value="1990-01-15">
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Giới tính</label>
-                                    <div class="col-sm-9">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="gender" id="male"
-                                                value="male" checked>
-                                            <label class="form-check-label" for="male">Nam</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="gender" id="female"
-                                                value="female">
-                                            <label class="form-check-label" for="female">Nữ</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-9 offset-sm-3">
-                                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                                        <button type="reset" class="btn btn-outline-secondary ms-2">Hủy</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                @if(session('thongbao'))
+                    <div class="alert alert-success shadow-sm"><i
+                            class="fas fa-check-circle me-2"></i>{{ session('thongbao') }}</div>
+                @endif
+                @if($errors->any())
+                    <div class="alert alert-danger shadow-sm">
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+                        </ul>
                     </div>
-                </div>
+                @endif
 
-                <!-- Địa chỉ giao hàng -->
-                <div id="dia-chi" class="tab-pane">
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div
-                            class="card-header bg-light border-bottom d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Địa chỉ giao hàng</h5>
-                            <button class="btn btn-sm btn-primary">+ Thêm địa chỉ mới</button>
-                        </div>
-                        <div class="card-body">
-                            <!-- Address Item -->
-                            <div class="row mb-4 pb-4 border-bottom">
-                                <div class="col-md-8">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <h6 class="mb-0">Địa chỉ nhà riêng</h6>
-                                        <span class="badge bg-success">Mặc định</span>
-                                    </div>
-                                    <p class="text-muted mb-2">
-                                        Nguyễn Văn A<br>
-                                        0901 234 567<br>
-                                        123 Đường Ngô Gia Tự, Quận Đống Đa, Hà Nội
-                                    </p>
+                <div class="bg-white p-4 rounded shadow-sm border-0">
+
+                    <div id="thong-tin" class="tab-pane active show">
+                        <form action="{{ route('profile.update') }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <h5 class="mb-4 fw-bold border-bottom pb-2">Thông tin tài khoản</h5>
+
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-3 col-form-label fw-bold">Họ và tên <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="hoten" class="form-control"
+                                        value="{{ old('hoten', $user->hoten) }}" required>
                                 </div>
-                                <div class="col-md-4 text-end">
-                                    <button class="btn btn-sm btn-outline-primary me-2">Chỉnh sửa</button>
-                                    <button class="btn btn-sm btn-outline-danger">Xóa</button>
+                            </div>
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-3 col-form-label fw-bold">Email <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-sm-9">
+                                    <input type="email" name="email" class="form-control"
+                                        value="{{ old('email', $user->email) }}" required>
+                                </div>
+                            </div>
+                            <div class="row mb-4 align-items-center">
+                                <label class="col-sm-3 col-form-label fw-bold">Số điện thoại</label>
+                                <div class="col-sm-9">
+                                    <input type="tel" name="sodienthoai" class="form-control"
+                                        value="{{ old('sodienthoai', $user->sodienthoai) }}"
+                                        placeholder="VD: 0987654321">
                                 </div>
                             </div>
 
-                            <!-- Address Item -->
+                            <h5 class="mb-4 mt-5 fw-bold border-bottom pb-2">Địa chỉ giao hàng</h5>
+                            <div class="row mb-4">
+                                <label class="col-sm-3 col-form-label fw-bold">Địa chỉ chi tiết</label>
+                                <div class="col-sm-9">
+                                    <textarea name="diachi" class="form-control" rows="3"
+                                        placeholder="Nhập số nhà, tên đường, phường/xã...">{{ old('diachi', $user->diachi) }}</textarea>
+                                </div>
+                            </div>
                             <div class="row">
-                                <div class="col-md-8">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <h6 class="mb-0">Địa chỉ công ty</h6>
-                                    </div>
-                                    <p class="text-muted mb-2">
-                                        Nguyễn Văn A<br>
-                                        0901 234 567<br>
-                                        456 Đường Lê Duẩn, Quận Hoàn Kiếm, Hà Nội
-                                    </p>
-                                </div>
-                                <div class="col-md-4 text-end">
-                                    <button class="btn btn-sm btn-outline-primary me-2">Chỉnh sửa</button>
-                                    <button class="btn btn-sm btn-outline-danger">Xóa</button>
+                                <div class="col-sm-9 offset-sm-3">
+                                    <button type="submit" class="btn btn-primary px-4 fw-bold">Lưu thông tin</button>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
-                </div>
 
-                <!-- Thay đổi mật khẩu -->
-                <div id="mat-khau" class="tab-pane">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-light border-bottom">
-                            <h5 class="mb-0">Thay đổi mật khẩu</h5>
-                        </div>
-                        <div class="card-body">
-                            <form>
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Mật khẩu hiện tại</label>
-                                    <div class="col-sm-9">
-                                        <input type="password" class="form-control"
-                                            placeholder="Nhập mật khẩu hiện tại">
-                                    </div>
+                    <div id="mat-khau" class="tab-pane">
+                        <form action="{{ route('profile.update') }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="hoten" value="{{ $user->hoten }}">
+                            <input type="hidden" name="email" value="{{ $user->email }}">
+
+                            <h5 class="mb-4 fw-bold border-bottom pb-2">Thay đổi mật khẩu</h5>
+
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label fw-bold">Mật khẩu hiện tại <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="password" name="matkhau_cu" class="form-control"
+                                        placeholder="Nhập mật khẩu cũ">
                                 </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Mật khẩu mới</label>
-                                    <div class="col-sm-9">
-                                        <input type="password" class="form-control" placeholder="Nhập mật khẩu mới">
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Xác nhận mật khẩu</label>
-                                    <div class="col-sm-9">
-                                        <input type="password" class="form-control" placeholder="Xác nhận mật khẩu mới">
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-9 offset-sm-3">
-                                        <button type="submit" class="btn btn-primary">Cập nhật mật khẩu</button>
-                                        <button type="reset" class="btn btn-outline-secondary ms-2">Hủy</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Đơn hàng -->
-                <div id="don-hang" class="tab-pane">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-light border-bottom">
-                            <h5 class="mb-0">Đơn hàng của tôi</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Mã đơn hàng</th>
-                                            <th>Ngày đặt</th>
-                                            <th>Tổng tiền</th>
-                                            <th>Trạng thái</th>
-                                            <th>Hành động</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>#DH001</td>
-                                            <td>15/04/2026</td>
-                                            <td>927.000đ</td>
-                                            <td><span class="badge bg-success">Đã giao</span></td>
-                                            <td><button class="btn btn-sm btn-outline-primary">Chi tiết</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#DH002</td>
-                                            <td>10/04/2026</td>
-                                            <td>549.000đ</td>
-                                            <td><span class="badge bg-warning">Đang giao</span></td>
-                                            <td><button class="btn btn-sm btn-outline-primary">Chi tiết</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#DH003</td>
-                                            <td>05/04/2026</td>
-                                            <td>1.299.000đ</td>
-                                            <td><span class="badge bg-info">Chờ xác nhận</span></td>
-                                            <td><button class="btn btn-sm btn-outline-primary">Chi tiết</button></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
                             </div>
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label fw-bold">Mật khẩu mới <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="password" name="matkhau" class="form-control"
+                                        placeholder="Ít nhất 8 ký tự">
+                                </div>
+                            </div>
+                            <div class="row mb-4 align-items-center">
+                                <label class="col-sm-4 col-form-label fw-bold">Nhập lại mật khẩu mới <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="password" name="matkhau_confirmation" class="form-control"
+                                        placeholder="Xác nhận lại mật khẩu">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-8 offset-sm-4">
+                                    <button type="submit" class="btn btn-warning text-dark px-4 fw-bold">Đổi mật
+                                        khẩu</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="don-hang" class="tab-pane">
+                        <h5 class="mb-4 fw-bold border-bottom pb-2">Đơn hàng của tôi</h5>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Mã ĐH</th>
+                                        <th>Ngày đặt</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Trạng thái</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($orders as $order)
+                                        <tr>
+                                            <td class="fw-bold text-primary">
+                                                #DH{{ str_pad($order->id, 3, '0', STR_PAD_LEFT) }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($order->ngaytao)->format('d/m/Y') }}</td>
+                                            <td class="fw-bold text-danger">
+                                                {{ number_format($order->tongtien, 0, ',', '.') }}đ
+                                            </td>
+                                            <td>
+                                                @if($order->trangthaidon == 0)
+                                                    <span class="badge bg-secondary">Chờ xử lý</span>
+                                                @elseif($order->trangthaidon == 1)
+                                                    <span class="badge bg-info text-dark">Đang giao</span>
+                                                @elseif($order->trangthaidon == 2)
+                                                    <span class="badge bg-success">Hoàn tất</span>
+                                                @else
+                                                    <span class="badge bg-danger">Đã hủy</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('orders.show', $order->id) }}"
+                                                    class="btn btn-sm btn-outline-primary">Chi tiết</a>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center py-4 text-muted">Bạn chưa có đơn hàng nào.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -275,29 +210,46 @@
 <style>
     #profile .list-group-item {
         border: none;
-        border-left: 3px solid transparent;
-        padding: 12px 20px;
+        border-left: 4px solid transparent;
+        padding: 15px 20px;
         cursor: pointer;
         transition: all 0.3s ease;
+        font-weight: 500;
+        color: #555;
     }
 
     #profile .list-group-item:hover {
-        background-color: #f0f0f0;
+        background-color: #f8f9fa;
         border-left-color: #0d6efd;
+        color: #0d6efd;
     }
 
     #profile .list-group-item.active {
         background-color: #e7f1ff;
         border-left-color: #0d6efd;
         color: #0d6efd;
+        font-weight: bold;
     }
 
     #profile .tab-pane {
         display: none;
+        animation: fadeIn 0.4s;
     }
 
     #profile .tab-pane.active {
         display: block;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>
 
@@ -307,13 +259,11 @@
             e.preventDefault();
             const tabName = btn.getAttribute('data-tab');
 
-            // Remove active class from all buttons and tabs
             document.querySelectorAll('.profile-tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('#profile .tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.querySelectorAll('#profile .tab-pane').forEach(pane => pane.classList.remove('active', 'show'));
 
-            // Add active class to clicked button and corresponding tab
             btn.classList.add('active');
-            document.getElementById(tabName).classList.add('active');
+            document.getElementById(tabName).classList.add('active', 'show');
         });
     });
 </script>

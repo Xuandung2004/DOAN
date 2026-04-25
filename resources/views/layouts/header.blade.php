@@ -556,3 +556,45 @@
 
         </div>
     </nav>
+    <div id="global-toast" class="shadow-lg rounded"
+        style="display: none; position: fixed; top: 30px; right: 30px; background-color: #28a745; color: white; padding: 15px 25px; z-index: 9999; align-items: center; gap: 10px; transition: opacity 0.4s ease; opacity: 0;">
+        <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+        <span id="global-toast-message" style="font-weight: bold; font-size: 1.1rem;">Thành công!</span>
+    </div>
+
+    <script>
+        // Hàm gọi Toast dùng chung ở mọi nơi
+        function showGlobalToast(message, type = 'success') {
+            let toast = document.getElementById('global-toast');
+            let toastMessage = document.getElementById('global-toast-message');
+            let icon = toast.querySelector('i');
+
+            // Gán chữ vào thông báo
+            toastMessage.innerText = message;
+
+            // Đổi màu tùy theo loại thông báo (Mặc định là Xanh - Thành công)
+            if (type === 'error') {
+                toast.style.backgroundColor = '#dc3545'; // Đỏ
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                toast.style.backgroundColor = '#ffc107'; // Vàng
+                toast.style.color = '#333';
+                icon.className = 'fas fa-exclamation-triangle';
+            } else {
+                toast.style.backgroundColor = '#28a745'; // Xanh
+                toast.style.color = 'white';
+                icon.className = 'fas fa-check-circle';
+            }
+
+            toast.style.display = 'flex';
+
+            // Delay nhẹ để css chạy mượt
+            setTimeout(() => { toast.style.opacity = '1'; }, 10);
+
+            // Sau 3s biến mất
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => { toast.style.display = 'none'; }, 400);
+            }, 3000);
+        }
+    </script>

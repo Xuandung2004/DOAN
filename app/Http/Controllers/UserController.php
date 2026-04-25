@@ -99,7 +99,10 @@ class UserController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
         
-        return view('pages.profile', compact('user'));
+        // Lấy thêm danh sách đơn hàng của User này để ném ra view
+        $orders = \App\Models\Order::where('nguoidungID', $user->id)->orderBy('ngaytao', 'desc')->get();
+        
+        return view('pages.profile', compact('user', 'orders'));
     }
 
     public function updateProfile(Request $request)
@@ -114,16 +117,32 @@ class UserController extends Controller
             'diachi'      => 'nullable|string|max:500',
         ]);
 
-        // Hỗ trợ User tự đổi mật khẩu nếu muốn
-        if ($request->filled('matkhau')) {
+        // LOGIC ĐỔI MẬT KHẨU (Có check mật khẩu cũ và xác nhận mật khẩu mới)
+        if ($request->filled('matkhau_cu') || $request->filled('matkhau')) {
             $request->validate([
-                'matkhau' => ['string', Password::defaults()]
+                'matkhau_cu' => [
+                    'required',
+                    function ($attribute, $value, $fail) use ($user) {
+                        // Kiểm tra xem mật khẩu cũ gõ vào có khớp với DB không
+                        if (!Hash::check($value, $user->matkhau)) {
+                            $fail('Mật khẩu hiện tại không chính xác.');
+                        }
+                    }
+                ],
+                // Rule 'confirmed' bắt buộc ở Frontend phải có ô input tên là 'matkhau_confirmation'
+                'matkhau' => ['required', 'string', 'min:8', 'confirmed'], 
+            ], [
+                'matkhau_cu.required' => 'Vui lòng nhập mật khẩu hiện tại.',
+                'matkhau.required' => 'Vui lòng nhập mật khẩu mới.',
+                'matkhau.confirmed' => 'Xác nhận mật khẩu mới không khớp.',
+                'matkhau.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự.'
             ]);
+
             $validated['matkhau'] = Hash::make($request->matkhau);
         }
 
         $user->update($validated);
 
-        return redirect()->route('profile.edit')->with('thongbao', 'Cập nhật hồ sơ cá nhân thành công!');
+        return redirect()->route('profile.edit')->with('thongbao', 'Cập nhật thành công!');
     }
 }

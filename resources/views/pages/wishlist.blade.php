@@ -68,10 +68,18 @@
                                             <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="addSingleItemToCart({{ $item->product->id }})">
                                                 <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
                                             </button>
-                                            
-                                            <button type="button" class="btn btn-sm btn-outline-danger" title="Xóa" onclick="removeWishlistItem(this, {{ $item->product->id }})">
-                                                <i class="fas fa-trash"></i>
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-danger remove-btn d-inline-flex align-items-center justify-content-center"
+                                                style="width: 32px; height: 32px; padding: 0;" title="Xóa khỏi giỏ hàng"
+                                                onclick="removeWishlistItem(this, {{ $item->product->id }})">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                </svg>
                                             </button>
+        
                                         </td>
                                     </tr>
                                 @endforeach
@@ -94,9 +102,11 @@
 <script>
     // 1. Hàm Xóa khỏi Wishlist mượt mà
     function removeWishlistItem(buttonElement, productId) {
-        if (!confirm('Bạn muốn xóa sản phẩm này khỏi danh sách yêu thích?')) return;
 
         let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Khóa nút tạm thời để tránh khách bấm đúp
+        buttonElement.disabled = true;
 
         // Lợi dụng luôn hàm toggle (Bật/Tắt) mà mình viết hôm qua
         fetch('{{ route('wishlist.toggle') }}', {
@@ -133,7 +143,11 @@
                 }, 300);
             }
         })
-        .catch(error => console.error('Lỗi:', error));
+        .catch(error => {
+            console.error('Lỗi:', error);
+            buttonElement.disabled = false; // Mở lại nút nếu có lỗi mạng
+            showGlobalToast('Có lỗi xảy ra, vui lòng thử lại!', 'error');
+        });
     }
 
     // 2. Hàm Thêm vào giỏ hàng (Giống hệt ở trang Danh sách sản phẩm)
@@ -155,12 +169,12 @@
         .then(response => response.json())
         .then(data => {
             if(data.status === 'success') {
-                alert('Đã thêm sản phẩm vào giỏ hàng!');
+                showGlobalToast('Đã thêm sản phẩm vào giỏ hàng!');
                 // Update số trên Header
                 let cartBadge = document.getElementById('cartItemCount');
                 if (cartBadge) cartBadge.innerText = data.totalItems;
             } else {
-                alert(data.message);
+                showGlobalToast(data.message, 'error');
             }
         })
         .catch(error => console.error('Lỗi:', error));

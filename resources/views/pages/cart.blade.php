@@ -83,14 +83,21 @@
                                             {{ number_format($item->gia, 0, ',', '.') }}đ
                                         </td>
 
-                                        <td class="text-end fw-bold text-danger">
+                                        <td class="text-end fw-bold text-danger item-total-{{ $item->sanphamID }}">
                                             {{ number_format($item->gia * $item->soluong, 0, ',', '.') }}đ
                                         </td>
 
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-sm btn-outline-danger remove-btn" title="Xóa"
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-danger remove-btn d-inline-flex align-items-center justify-content-center"
+                                                style="width: 32px; height: 32px; padding: 0;" title="Xóa khỏi giỏ hàng"
                                                 onclick="removeFromCart(this, {{ $item->sanphamID }})">
-                                                <i class="fas fa-trash"></i>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                </svg>
                                             </button>
                                         </td>
                                     </tr>
@@ -108,28 +115,36 @@
 
                             <div class="d-flex justify-content-between mb-3 text-secondary">
                                 <span>Tổng sản phẩm:</span>
-                                <span class="fw-bold text-dark">{{ $tongSanPham }} sản phẩm</span>
+                                <span class="fw-bold text-dark" id="cart-item-count">{{ $tongSanPham }} sản phẩm</span>
                             </div>
 
                             <div class="d-flex justify-content-between mb-3 text-secondary">
                                 <span>Tạm tính:</span>
-                                <span class="fw-bold text-dark">{{ number_format($tamTinh, 0, ',', '.') }}đ</span>
+                                <span class="fw-bold text-dark"
+                                    id="cart-subtotal">{{ number_format($tamTinh, 0, ',', '.') }}đ</span>
                             </div>
 
-                            <div class="d-flex justify-content-between mb-3 pb-3 border-bottom text-secondary">
+                            <div class="d-flex justify-content-between mb-3 text-secondary">
                                 <span>Phí vận chuyển:</span>
                                 <span class="fw-bold text-dark">{{ number_format($phiVanChuyen, 0, ',', '.') }}đ</span>
                             </div>
 
-                            <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
-                                <span class="fs-6 fw-bold">Tổng thanh toán:</span>
-                                <span
-                                    class="fs-4 fw-bold text-danger">{{ number_format($tongThanhToan, 0, ',', '.') }}đ</span>
+                            <div class="d-flex justify-content-between mb-3 text-success d-none" id="discount-row">
+                                <span>Giảm giá (<span id="applied-coupon-code"></span>):</span>
+                                <span class="fw-bold" id="cart-discount">-0đ</span>
                             </div>
 
-                            <a href="#" class="btn btn-primary btn-lg w-100 mb-3 fw-bold shadow-sm">Tiến hành Thanh toán</a>
-                            <a href="{{ route('products') }}" class="btn btn-outline-secondary w-100"><i
-                                    class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm</a>
+                            <div class="d-flex justify-content-between align-items-center mb-4 mt-2 border-top pt-3">
+                                <span class="fs-6 fw-bold">Tổng thanh toán:</span>
+                                <span class="fs-4 fw-bold text-danger"
+                                    id="cart-total">{{ number_format($tongThanhToan, 0, ',', '.') }}đ</span>
+                            </div>
+
+                            <a href="{{ route('checkout.index') }}"
+                                class="btn btn-primary btn-lg w-100 mb-3 fw-bold shadow-sm">Tiến hành Thanh toán</a>
+                            <a href="{{ route('products') }}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
+                            </a>
                         </div>
                     </div>
 
@@ -138,9 +153,11 @@
                             <h6 class="card-title fw-bold mb-3"><i class="fas fa-ticket-alt me-2 text-warning"></i>Mã khuyến
                                 mãi</h6>
                             <div class="input-group">
-                                <input type="text" class="form-control border-secondary" placeholder="Nhập mã ưu đãi..."
-                                    aria-label="Mã khuyến mãi">
-                                <button class="btn btn-dark px-4" type="button">Áp dụng</button>
+                                <input type="text" id="coupon-code" class="form-control border-secondary text-uppercase"
+                                    placeholder="Nhập mã ưu đãi...">
+
+                                <button class="btn btn-dark px-4" id="apply-coupon-btn" type="button"
+                                    onclick="applyCoupon()">Áp dụng</button>
                             </div>
                         </div>
                     </div>
@@ -149,12 +166,30 @@
         </div>
     </div>
 </section>
+<div id="custom-toast" class="shadow-lg rounded"
+    style="display: none; position: fixed; top: 30px; right: 30px; background-color: #28a745; color: white; padding: 15px 25px; z-index: 9999; align-items: center; gap: 10px; transition: opacity 0.4s ease; opacity: 0;">
+    <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+    <span id="toast-message" style="font-weight: bold; font-size: 1.1rem;">Thành công!</span>
+</div>
 
 <script>
-    // Hàm xóa sản phẩm (đã làm hôm qua)
-    function removeFromCart(buttonElement, productId) {
-        if (!confirm('Bạn muốn xóa sản phẩm này khỏi giỏ?')) return;
+    // 1. HÀM HIỂN THỊ THÔNG BÁO XANH LÁ (TOAST)
+    function showSuccessToast(message) {
+        let toast = document.getElementById('custom-toast');
+        document.getElementById('toast-message').innerText = message;
 
+        toast.style.display = 'flex';
+        setTimeout(() => { toast.style.opacity = '1'; }, 10);
+
+        // Sau 3 giây tự biến mất
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => { toast.style.display = 'none'; }, 400);
+        }, 3000);
+    }
+
+    // 2. HÀM XÓA SẢN PHẨM KHỎI GIỎ (Bỏ confirm, Xóa thẳng tay)
+    function removeFromCart(buttonElement, productId) {
         let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         fetch('{{ route('cart.remove') }}', {
@@ -169,43 +204,186 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    // Hiệu ứng xóa dòng
                     let productRow = buttonElement.closest('tr');
                     if (productRow) {
+                        // Hiệu ứng bay màu sang phải
                         productRow.style.transition = 'all 0.4s ease';
                         productRow.style.opacity = '0';
                         productRow.style.transform = 'translateX(50px)';
+
                         setTimeout(() => {
-                            productRow.remove();
-                            // Tải lại trang nhẹ nhàng để PHP tính lại tổng tiền
-                            window.location.reload();
+                            productRow.remove(); // Xóa dòng HTML
+
+                            // Cập nhật lại các con số tiền bên cột Tóm tắt
+                            document.getElementById('cart-subtotal').innerText = data.subtotal;
+                            document.getElementById('cart-total').innerText = data.total;
+                            document.getElementById('cart-item-count').innerText = data.totalItemsCount + ' sản phẩm';
+
+                            // --- XỬ LÝ GIAO DIỆN MÃ GIẢM GIÁ KHI XÓA SẢN PHẨM ---
+                            let discountRow = document.getElementById('discount-row');
+                            let applyBtn = document.getElementById('apply-coupon-btn');
+                            let codeInput = document.getElementById('coupon-code');
+
+                            if (data.hasCoupon) {
+                                document.getElementById('cart-discount').innerText = '-' + data.discount;
+                            } else {
+                                // Nếu mất mã -> Ẩn dòng giảm giá, mở khóa ô nhập mã
+                                if (discountRow) discountRow.classList.add('d-none');
+                                if (codeInput) {
+                                    codeInput.readOnly = false;
+                                    codeInput.value = '';
+                                }
+                                if (applyBtn) {
+                                    applyBtn.innerText = 'Áp dụng';
+                                    applyBtn.classList.replace('btn-success', 'btn-dark');
+                                    applyBtn.disabled = false;
+                                }
+                                // Cảnh báo khách hàng
+                                if (data.couponMessage) {
+                                    showGlobalToast(data.couponMessage, 'warning');
+                                }
+                            }
+                            // --------------------------------------------------
+                            let cartBadge = document.getElementById('cartItemCount'); // Thay ID cho đúng với HTML của ông bạn
+                            if (cartBadge) cartBadge.innerText = data.totalItemsCount;
+                            // Hiện thông báo góc phải
+                            showSuccessToast(data.message);
+
+                            // Nếu xóa hết sạch đồ trong giỏ thì mới load lại trang
+                            if (data.totalItemsCount === 0) {
+                                window.location.reload();
+                            }
                         }, 400);
                     }
                 } else {
-                    alert(data.message);
+                    showGlobalToast(data.message, 'error');
                 }
             })
             .catch(error => console.error('Lỗi:', error));
     }
 
-    // Hàm tạm để nút +/- nhảy số (Sẽ cần viết AJAX gọi server lưu lại sau)
+    // 3. HÀM CẬP NHẬT SỐ LƯỢNG (+ / -)
     function updateCartQty(buttonElement, changeAmount) {
+        let tr = buttonElement.closest('tr');
+        let productId = tr.getAttribute('data-product-id');
         let inputField = buttonElement.parentElement.querySelector('.qty-input');
+
         let currentVal = parseInt(inputField.value);
         let maxVal = parseInt(inputField.getAttribute('max'));
-
         let newVal = currentVal + changeAmount;
 
         if (newVal >= 1 && newVal <= maxVal) {
             inputField.value = newVal;
-            // TODO: Ở đây cần gọi 1 hàm AJAX gửi về Server để lưu số lượng mới, rồi load lại tổng tiền. 
-            // Tạm thời mình cứ tải lại trang để đảm bảo dữ liệu chuẩn xác nhất
-            // window.location.reload(); 
+            let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch('{{ route('cart.update') }}', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ sanpham_id: productId, soluong: newVal })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        document.querySelector('.item-total-' + productId).innerText = data.itemTotal;
+                        document.getElementById('cart-subtotal').innerText = data.subtotal;
+                        document.getElementById('cart-total').innerText = data.total;
+                        document.getElementById('cart-item-count').innerText = data.totalItemsCount + ' sản phẩm';
+                        // Cập nhật số trên Header
+                        let cartBadge = document.getElementById('cartItemCount');
+                        if (cartBadge) cartBadge.innerText = data.totalItemsCount;
+                        // --- XỬ LÝ GIAO DIỆN MÃ GIẢM GIÁ KHI TĂNG/GIẢM SỐ LƯỢNG ---
+                        let discountRow = document.getElementById('discount-row');
+                        let applyBtn = document.getElementById('apply-coupon-btn');
+                        let codeInput = document.getElementById('coupon-code');
+
+                        if (data.hasCoupon) {
+                            document.getElementById('cart-discount').innerText = '-' + data.discount;
+                        } else {
+                            // Nếu mất mã -> Ẩn dòng giảm giá, mở khóa ô nhập mã
+                            if (discountRow) discountRow.classList.add('d-none');
+                            if (codeInput) {
+                                codeInput.readOnly = false;
+                                codeInput.value = '';
+                            }
+                            if (applyBtn) {
+                                applyBtn.innerText = 'Áp dụng';
+                                applyBtn.classList.replace('btn-success', 'btn-dark');
+                                applyBtn.disabled = false;
+                            }
+                            // Cảnh báo khách hàng
+                            if (data.couponMessage) {
+                                showGlobalToast(data.couponMessage, 'warning'); // Cảnh báo vàng
+                            }
+                        }
+                        // ---------------------------------------------------------
+                    } else {
+                        showGlobalToast(data.message, 'error');
+                        inputField.value = currentVal;
+                    }
+                })
+                .catch(error => console.error('Lỗi:', error));
         } else if (newVal > maxVal) {
-            alert('Xin lỗi, sản phẩm này chỉ còn ' + maxVal + ' mặt hàng!');
+            showGlobalToast('Xin lỗi, sản phẩm này trong kho chỉ còn ' + maxVal + ' chiếc!', 'error');
         }
     }
+
+    // 4. HÀM ÁP MÃ GIẢM GIÁ (Dùng Toast)
+    function applyCoupon() {
+        let codeInput = document.getElementById('coupon-code');
+        let applyBtn = document.getElementById('apply-coupon-btn');
+        let code = codeInput.value.trim();
+
+        if (!code) {
+            alert('Vui lòng nhập mã giảm giá!');
+            return;
+        }
+
+        let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        applyBtn.disabled = true;
+        applyBtn.innerText = 'Đang xử lý...';
+
+        fetch('{{ route('cart.applyCoupon') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ ma_giam_gia: code })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showSuccessToast(data.message); // Gọi Toast ra thay cho Alert
+
+                    document.getElementById('discount-row').classList.remove('d-none');
+                    document.getElementById('applied-coupon-code').innerText = code.toUpperCase();
+
+                    document.getElementById('cart-discount').innerText = '-' + data.soTienGiam;
+                    document.getElementById('cart-total').innerText = data.tongThanhToan;
+
+                    codeInput.readOnly = true;
+                    applyBtn.innerText = 'Đã áp dụng';
+                    applyBtn.classList.replace('btn-dark', 'btn-success');
+                } else {
+                    showGlobalToast(data.message, 'error');
+                    applyBtn.disabled = false;
+                    applyBtn.innerText = 'Áp dụng';
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi:', error);
+                applyBtn.disabled = false;
+                applyBtn.innerText = 'Áp dụng';
+            });
+    }
 </script>
+
 
 <style>
     #cart .hover-primary:hover {

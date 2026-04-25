@@ -28,17 +28,29 @@ class WishlistController extends Controller
 
         // 3. Xử lý Bật/Tắt (Toggle)
         if ($wishlist) {
-            // Nếu có rồi thì XÓA đi (Bỏ yêu thích)
+            // Nếu có rồi thì XÓA đi
             $wishlist->delete();
-            return response()->json(['status' => 'removed', 'message' => 'Đã bỏ khỏi danh sách yêu thích!']);
+            $status = 'removed';
+            $message = 'Đã bỏ khỏi danh sách yêu thích!';
         } else {
             // Nếu chưa có thì THÊM mới
             Wishlist::create([
                 'nguoidungID' => $nguoidungID,
                 'sanphamID' => $sanphamID
             ]);
-            return response()->json(['status' => 'added', 'message' => 'Đã thêm vào danh sách yêu thích!']);
+            $status = 'added';
+            $message = 'Đã thêm vào danh sách yêu thích!';
         }
+
+        // --- ĐOẠN MỚI THÊM: ĐẾM LẠI TỔNG SỐ LƯỢNG SAU KHI THÊM/XÓA ---
+        $totalItems = Wishlist::where('nguoidungID', $nguoidungID)->count();
+
+        // 4. Trả về kết quả kèm theo con số totalItems
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'totalItems' => $totalItems // JS sẽ bắt lấy con số này để in lên Header
+        ]);
     }
     /**
      * Hiển thị trang Danh sách yêu thích

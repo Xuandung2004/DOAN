@@ -169,7 +169,7 @@
             .then(data => {
                 if (data.status === 'success') {
                     // Thông báo thành công mượt mà
-                    alert(data.message);
+                    showGlobalToast('Đã thêm sản phẩm vào giỏ hàng!');
                     // Đếm số 
                     let cartBadge = document.getElementById('cartItemCount');
                     if (cartBadge) {
@@ -177,7 +177,7 @@
                     }
                 } else {
                     // Thông báo lỗi (ví dụ hết hàng)
-                    alert(data.message);
+                    showGlobalToast(data.message, 'error');
                 }
             })
             .catch(error => console.error('Error:', error));

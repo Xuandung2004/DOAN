@@ -224,7 +224,7 @@
         })
             .then(response => {
                 if (response.status === 401) {
-                    alert('Vui lòng đăng nhập để sử dụng chức năng này!');
+                    showGlobalToast('Vui lòng đăng nhập để sử dụng chức năng này!', 'error');
                     window.location.href = '{{ route('login') }}';
                     throw new Error('Not logged in');
                 }
@@ -243,7 +243,13 @@
                     icon.classList.add('far');
                     text.innerText = 'Thêm vào yêu thích';
                 }
-                alert(data.message);
+                // --- ĐOẠN MỚI THÊM: CẬP NHẬT SỐ TRÊN HEADER ---
+                let wishlistBadge = document.getElementById('wishlistItemCount');
+                if (wishlistBadge && data.totalItems !== undefined) {
+                    wishlistBadge.innerText = data.totalItems;
+                }
+                // ----------------------------------------------
+                showGlobalToast(data.message);
             })
             .catch(error => console.error('Error:', error));
     }
@@ -267,7 +273,7 @@
         })
             .then(response => {
                 if (response.status === 401) {
-                    alert('Vui lòng đăng nhập để mua hàng!');
+                    showGlobalToast('Vui lòng đăng nhập để mua hàng!', 'error');
                     window.location.href = '{{ route('login') }}';
                     throw new Error('Not logged in');
                 }
@@ -275,13 +281,14 @@
             })
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message);
+                    showGlobalToast('Đã thêm sản phẩm vào giỏ hàng!');
+
                     let cartBadge = document.getElementById('cartItemCount');
                     if (cartBadge) {
                         cartBadge.innerText = data.totalItems;
                     }
                 } else {
-                    alert(data.message);
+                    showGlobalToast(data.message, 'error');
                 }
             })
             .catch(error => console.error('Error:', error));

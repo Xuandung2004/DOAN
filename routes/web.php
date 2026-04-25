@@ -20,6 +20,10 @@ use App\Http\Controllers\ReviewController;
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+// cập nhật số lượng sản phẩm trong giỏ hàng (Dùng PATCH vì chỉ cập nhật 1 phần dữ liệu)
+Route::patch('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
+// Áp dụng mã giảm giá (Coupon)
+Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name('cart.applyCoupon');
 
 
 // Thanh toán (Checkout)
