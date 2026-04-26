@@ -15,6 +15,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ChatController;
 
 // Giỏ hàng
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
@@ -90,6 +91,16 @@ Route::middleware('auth')->group(function () {
     Route::put('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
     // Đánh giá sản phẩm
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    // Chat với Admin
+    // API xử lý Chat (Dùng chung cho cả Admin và Khách)
+    Route::get('/chat/messages/{userId}', [ChatController::class, 'getMessages']);
+    Route::post('/chat/send', [ChatController::class, 'sendMessage']);
+    
+    // Trang hiển thị Chat của Admin
+    Route::get('/admin/chat', [ChatController::class, 'adminChat'])->name('admin.chat');
+    //Hàm đánh dấu tin nhắn đã đọc (Dùng chung cho cả Admin và Khách)
+    Route::post('/chat/mark-read', [ChatController::class, 'markRead']);
+    Route::get('/chat/unread', [ChatController::class, 'getUnread']);
 
 });
 

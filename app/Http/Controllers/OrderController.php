@@ -23,20 +23,35 @@ class OrderController extends Controller
         
         $request->validate(['trangthaidon' => 'required|integer|in:0,1,2,3']);
 
-        // Xử lý hoàn kho nếu Hủy đơn
-        if ($request->trangthaidon == 3 && $order->trangthaidon != 3) {
+        $trangThaiCu = $order->trangthaidon;
+        $trangThaiMoi = $request->trangthaidon;
+
+        // 1. Xử lý số lượng tồn kho & Mã giảm giá
+        if ($trangThaiMoi == 3 && $trangThaiCu != 3) {
+            // Khách Hủy đơn -> Trả lại hàng vào kho
             foreach($order->orderItems as $item) {
                 $item->product->increment('soluong', $item->soluong);
             }
-            if ($order->magiamgiaID) \App\Models\Coupon::where('id', $order->magiamgiaID)->decrement('dasudung');
+            // Trả lại lượt dùng mã giảm giá
+            if ($order->magiamgiaID) {
+                \App\Models\Coupon::where('id', $order->magiamgiaID)->decrement('dasudung');
+            }
         } 
-        elseif ($order->trangthaidon == 3 && $request->trangthaidon != 3) {
-             foreach($order->orderItems as $item) {
+        elseif ($trangThaiCu == 3 && $trangThaiMoi != 3) {
+            // Khôi phục đơn từ trạng thái Hủy -> Trừ lại hàng trong kho
+            foreach($order->orderItems as $item) {
                 $item->product->decrement('soluong', $item->soluong);
             }
         }
 
-        $order->trangthaidon = $request->trangthaidon;
+        // 2. Cập nhật trạng thái vật lý của đơn hàng
+        $order->trangthaidon = $trangThaiMoi;
+
+        // 3. LOGIC TỰ ĐỘNG: Nếu đơn "Hoàn tất" (2) thì chắc chắn đã thu tiền (1)
+        if ($trangThaiMoi == 2) {
+            $order->trangthaithanhtoan = 1;
+        }
+
         $order->save();
 
         return back()->with('thongbao', 'Đã cập nhật trạng thái đơn hàng!');

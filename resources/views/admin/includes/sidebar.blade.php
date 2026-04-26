@@ -94,6 +94,12 @@
     </li>
 
     <li class="nav-item">
+        <a class="nav-link" href="{{ route('admin.chat') }}">
+            <i class="fas fa-fw fa-headset"></i>
+            <span class="font-weight-bold text-warning">Hỗ trợ Chat</span>
+        </a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true"
             aria-controls="collapseUsers">
             <i class="fas fa-users"></i>

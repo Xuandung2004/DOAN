@@ -7,15 +7,6 @@
         <h1 class="h3 mb-0 text-gray-800">Danh sách Đơn hàng</h1>
     </div>
 
-    @if(session('thongbao'))
-        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-            <i class="fas fa-check-circle mr-2"></i> {{ session('thongbao') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
     <div class="card shadow mb-4 border-bottom-primary">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-clipboard-list mr-2"></i>Tất cả đơn hàng hệ thống
@@ -71,10 +62,10 @@
                                         @csrf
                                         @method('PATCH')
                                         <select name="trangthaidon" class="form-control form-control-sm font-weight-bold 
-                                                    {{ $order->trangthaidon == 0 ? 'text-secondary' : '' }}
-                                                    {{ $order->trangthaidon == 1 ? 'text-primary' : '' }}
-                                                    {{ $order->trangthaidon == 2 ? 'text-success' : '' }}
-                                                    {{ $order->trangthaidon == 3 ? 'text-danger' : '' }}"
+                                                            {{ $order->trangthaidon == 0 ? 'text-secondary' : '' }}
+                                                            {{ $order->trangthaidon == 1 ? 'text-primary' : '' }}
+                                                            {{ $order->trangthaidon == 2 ? 'text-success' : '' }}
+                                                            {{ $order->trangthaidon == 3 ? 'text-danger' : '' }}"
                                             onchange="this.form.submit()">
                                             <option value="0" {{ $order->trangthaidon == 0 ? 'selected' : '' }}>Chờ xử lý</option>
                                             <option value="1" {{ $order->trangthaidon == 1 ? 'selected' : '' }}>Đang giao</option>
