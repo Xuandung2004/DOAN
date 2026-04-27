@@ -16,17 +16,28 @@
 
     <div class="card shadow mb-4 border-bottom-primary">
         <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Tìm kiếm mã...">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+            <div class="row mb-4">
+                <div class="col-md-5">
+                    <form action="" method="GET" class="d-flex">
+                        <div class="input-group shadow-sm">
+                            <input type="text" name="keyword" class="form-control" placeholder="Nhập mã giảm giá cần tìm..."
+                                value="{{ request('keyword') }}">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+
+                        @if(request('keyword'))
+                            <a href="{{ url()->current() }}" class="btn btn-secondary ms-2 d-flex align-items-center shadow-sm"
+                                style="white-space: nowrap;">
+                                <i class="fas fa-times me-1"></i> Hủy
+                            </a>
+                        @endif
+                    </form>
                 </div>
             </div>
-
             <div class="table-responsive">
                 <table class="table table-bordered table-hover align-middle text-center" width="100%" cellspacing="0">
                     <thead class="thead-light">

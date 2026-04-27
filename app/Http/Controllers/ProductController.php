@@ -20,9 +20,20 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        // Lấy danh sách sản phẩm, kèm theo tên danh mục (để tránh lỗi N+1 Query)
-        $products = Product::with('category')->where('trangthai', '>=',0)->orderBy('ngaytao', 'desc')->paginate(10);
-        return view('admin.products.index', compact('products'));
+        // 1. Khởi tạo query gốc (Kèm danh mục và điều kiện trạng thái)
+    $query = Product::with('category')->where('trangthai', '>=', 0);
+
+    // 2. Bắt từ khóa tìm kiếm (Nếu có)
+    if ($request->has('keyword') && $request->keyword != '') {
+        $keyword = $request->keyword;
+        // Lọc những sản phẩm có tên chứa từ khóa
+        $query->where('ten', 'like', '%' . $keyword . '%');
+    }
+
+    // 3. Sắp xếp, phân trang và THÊM withQueryString() để giữ từ khóa trên URL
+    $products = $query->orderBy('ngaytao', 'desc')->paginate(10)->withQueryString();
+
+    return view('admin.products.index', compact('products'));
     }
 
     /**

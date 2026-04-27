@@ -51,17 +51,10 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrders" aria-expanded="true"
-            aria-controls="collapseOrders">
+        <a class="nav-link" href="{{ route('admin.orders.index') }}">
             <i class="fas fa-wallet"></i>
             <span>Đơn hàng</span>
         </a>
-        <div id="collapseOrders" class="collapse" aria-labelledby="headingOrders" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Quản lý Đơn hàng:</h6>
-                <a class="collapse-item" href="{{ route('admin.orders.index') }}">Tất cả Đơn hàng</a>
-            </div>
-        </div>
     </li>
 
     <li class="nav-item">
@@ -80,17 +73,10 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReviews"
-            aria-expanded="true" aria-controls="collapseReviews">
+        <a class="nav-link" href="{{ route('admin.reviews.index') }}">
             <i class="fas fa-comments"></i>
             <span>Đánh giá</span>
         </a>
-        <div id="collapseReviews" class="collapse" aria-labelledby="headingReviews" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Quản lý Đánh giá:</h6>
-                <a class="collapse-item" href="{{ route('admin.reviews.index') }}">Danh sách Đánh giá</a>
-            </div>
-        </div>
     </li>
 
     <li class="nav-item">
@@ -99,6 +85,7 @@
             <span class="font-weight-bold text-warning">Hỗ trợ Chat</span>
         </a>
     </li>
+
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true"
             aria-controls="collapseUsers">

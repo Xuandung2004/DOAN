@@ -14,11 +14,28 @@ class UserController extends Controller
     // PHẦN DÀNH CHO ADMIN (QUẢN TRỊ VIÊN)
     // ==========================================
 
-    public function index()
-    {
-        $users = User::orderBy('ngaytao', 'desc')->paginate(15);
-        return view('admin.users.index', compact('users'));
+    public function index(Request $request)
+{
+    // 1. Khởi tạo query gốc
+    $query = User::query();
+
+    // 2. Bắt từ khóa tìm kiếm
+    if ($request->has('keyword') && $request->keyword != '') {
+        $keyword = $request->keyword;
+
+        // Bọc các điều kiện OR lại để không bị xung đột nếu sau này thêm điều kiện khác
+        $query->where(function($q) use ($keyword) {
+            $q->where('hoten', 'like', '%' . $keyword . '%')
+              ->orWhere('email', 'like', '%' . $keyword . '%')
+              ->orWhere('sodienthoai', 'like', '%' . $keyword . '%');
+        });
     }
+
+    // 3. Sắp xếp, phân trang (15 dòng) và giữ từ khóa trên URL
+    $users = $query->orderBy('ngaytao', 'desc')->paginate(15)->withQueryString();
+
+    return view('admin.users.index', compact('users'));
+}
 
     public function create()
     {

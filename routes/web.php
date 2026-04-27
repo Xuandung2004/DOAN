@@ -19,7 +19,7 @@ use App\Http\Controllers\ChatController;
 
 // Giỏ hàng
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
-Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/add', [CartController::class, 'addToCart'])->middleware('throttle:6,1')->name('cart.add');
 Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 // cập nhật số lượng sản phẩm trong giỏ hàng (Dùng PATCH vì chỉ cập nhật 1 phần dữ liệu)
 Route::patch('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
@@ -30,6 +30,7 @@ Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name(
 // Thanh toán (Checkout)
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
+Route::get('/vnpay-return', [CheckoutController::class, 'vnpayReturn'])->name('vnpay.return');
 
 // Gọi bằng phương thức POST để bảo mật (Không để trong middleware auth vì JS sẽ tự bắt lỗi báo cho người dùng)
 Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
@@ -90,7 +91,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
     Route::put('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
     // Đánh giá sản phẩm
-    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::post('/reviews', [ReviewController::class, 'store'])->middleware('throttle:3,1')->name('reviews.store');
     // Chat với Admin
     // API xử lý Chat (Dùng chung cho cả Admin và Khách)
     Route::get('/chat/messages/{userId}', [ChatController::class, 'getMessages']);
@@ -107,7 +108,7 @@ Route::middleware('auth')->group(function () {
 // ==========================================
 // ADMIN ROUTES
 // ==========================================
-    Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Trang thống kê báo cáo
     Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
 // Quản lý người dùng: Dùng resource nhưng BỎ QUA hàm show và destroy (vì mình không dùng)

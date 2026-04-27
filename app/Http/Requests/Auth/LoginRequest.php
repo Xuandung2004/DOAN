@@ -34,6 +34,18 @@ class LoginRequest extends FormRequest
     }
 
     /**
+     * BƯỚC THÊM MỚI: Dịch các lỗi Validate cơ bản sang Tiếng Việt
+     */
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'Vui lòng nhập địa chỉ email.',
+            'email.email' => 'Định dạng email không hợp lệ.',
+            'password.required' => 'Vui lòng nhập mật khẩu.',
+        ];
+    }
+
+    /**
      * Attempt to authenticate the request's credentials.
      *
      * @throws ValidationException
@@ -46,7 +58,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email' => 'Email hoặc mật khẩu không chính xác!',
             ]);
         }
 
@@ -69,10 +81,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            'email' => 'Bạn đã đăng nhập sai quá nhiều lần. Vui lòng thử lại sau ' . $seconds . ' giây.',
         ]);
     }
 

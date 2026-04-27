@@ -6,13 +6,14 @@ use App\Models\Review;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ReviewRequest;
 
 class ReviewController extends Controller
 {
     // ==========================================
     // PHẦN 1: DÀNH CHO USER (Thêm đánh giá)
     // ==========================================
-    public function store(Request $request)
+    public function store(ReviewRequest $request)
     {
         $request->validate([
             'sanphamID' => 'required|exists:sanpham,id',
@@ -56,12 +57,36 @@ class ReviewController extends Controller
     // ==========================================
     // PHẦN 2: DÀNH CHO ADMIN (Quản lý đánh giá)
     // ==========================================
-    public function adminIndex()
-    {
-        // Truy xuất kết hợp bảng SAN_PHAM và NGUOI_DUNG
-        $reviews = Review::with(['product', 'user'])->orderBy('ngaytao', 'desc')->paginate(15);
-        return view('admin.reviews.index', compact('reviews'));
+    public function adminIndex(Request $request)
+{
+    // 1. Khởi tạo query gốc
+    $query = Review::with(['product', 'user']);
+
+    // 2. Bắt từ khóa tìm kiếm
+    if ($request->has('keyword') && $request->keyword != '') {
+        $keyword = $request->keyword;
+
+        $query->where(function($q) use ($keyword) {
+            // Tìm trong nội dung bình luận
+            $q->where('binhluan', 'like', '%' . $keyword . '%')
+              
+              // Tìm xuyên qua bảng User (Tên khách hàng)
+              ->orWhereHas('user', function($qUser) use ($keyword) {
+                  $qUser->where('hoten', 'like', '%' . $keyword . '%');
+              })
+              
+              // Tìm xuyên qua bảng Product (Tên sản phẩm)
+              ->orWhereHas('product', function($qProduct) use ($keyword) {
+                  $qProduct->where('ten', 'like', '%' . $keyword . '%');
+              });
+        });
     }
+
+    // 3. Sắp xếp, phân trang (15 dòng) và giữ từ khóa trên URL
+    $reviews = $query->orderBy('ngaytao', 'desc')->paginate(15)->withQueryString();
+
+    return view('admin.reviews.index', compact('reviews'));
+}
 
     public function destroy($id)
     {

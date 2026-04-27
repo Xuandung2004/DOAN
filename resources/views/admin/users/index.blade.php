@@ -15,6 +15,25 @@
             <h6 class="m-0 font-weight-bold text-primary">Tất cả tài khoản</h6>
         </div>
         <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <form action="" method="GET" class="d-flex">
+                        <input type="text" name="keyword" class="form-control me-2 shadow-sm"
+                            placeholder="Tìm theo họ tên, email hoặc SĐT..." value="{{ request('keyword') }}">
+
+                        <button type="submit" class="btn btn-primary d-flex align-items-center shadow-sm"
+                            style="white-space: nowrap;">
+                            <i class="fas fa-search me-1"></i> Tìm kiếm
+                        </button>
+
+                        @if(request('keyword'))
+                            <a href="{{ url()->current() }}" class="btn btn-secondary ms-2 d-flex align-items-center shadow-sm">
+                                <i class="fas fa-times me-1"></i> Hủy
+                            </a>
+                        @endif
+                    </form>
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                     <thead class="thead-light">

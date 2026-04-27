@@ -13,6 +13,25 @@
             </h6>
         </div>
         <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <form action="" method="GET" class="d-flex">
+                        <input type="text" name="keyword" class="form-control me-2 shadow-sm"
+                            placeholder="Nhập mã đơn (DH008), tên hoặc SĐT khách..." value="{{ request('keyword') }}">
+
+                        <button type="submit" class="btn btn-primary d-flex align-items-center shadow-sm"
+                            style="white-space: nowrap;">
+                            <i class="fas fa-search me-1"></i> Tìm đơn
+                        </button>
+
+                        @if(request('keyword'))
+                            <a href="{{ url()->current() }}" class="btn btn-secondary ms-2 d-flex align-items-center shadow-sm">
+                                <i class="fas fa-times me-1"></i> Hủy
+                            </a>
+                        @endif
+                    </form>
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover align-middle" width="100%" cellspacing="0">
                     <thead class="thead-light">
@@ -62,10 +81,10 @@
                                         @csrf
                                         @method('PATCH')
                                         <select name="trangthaidon" class="form-control form-control-sm font-weight-bold 
-                                                            {{ $order->trangthaidon == 0 ? 'text-secondary' : '' }}
-                                                            {{ $order->trangthaidon == 1 ? 'text-primary' : '' }}
-                                                            {{ $order->trangthaidon == 2 ? 'text-success' : '' }}
-                                                            {{ $order->trangthaidon == 3 ? 'text-danger' : '' }}"
+                                                                    {{ $order->trangthaidon == 0 ? 'text-secondary' : '' }}
+                                                                    {{ $order->trangthaidon == 1 ? 'text-primary' : '' }}
+                                                                    {{ $order->trangthaidon == 2 ? 'text-success' : '' }}
+                                                                    {{ $order->trangthaidon == 3 ? 'text-danger' : '' }}"
                                             onchange="this.form.submit()">
                                             <option value="0" {{ $order->trangthaidon == 0 ? 'selected' : '' }}>Chờ xử lý</option>
                                             <option value="1" {{ $order->trangthaidon == 1 ? 'selected' : '' }}>Đang giao</option>

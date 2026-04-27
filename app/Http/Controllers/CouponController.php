@@ -14,10 +14,21 @@ class CouponController extends Controller
     /**
      * Use case: Xem danh sách mã giảm giá
      */
-    public function index()
+    public function index(Request $request)
     {
-        $coupons = Coupon::orderBy('ngaytao', 'desc')->paginate(10);
-        return view('admin.coupons.index', compact('coupons'));
+        $query = Coupon::query();
+
+    // Bắt từ khóa tìm kiếm
+    if ($request->has('keyword') && $request->keyword != '') {
+        $keyword = $request->keyword;
+        // Tìm kiếm theo Mã giảm giá
+        $query->where('ma', 'like', '%' . $keyword . '%');
+    }
+
+    // Phân trang và giữ nguyên từ khóa trên URL
+    $coupons = $query->orderBy('ngaytao', 'desc')->paginate(10)->withQueryString();
+
+    return view('admin.coupons.index', compact('coupons'));
     }
 
     /**

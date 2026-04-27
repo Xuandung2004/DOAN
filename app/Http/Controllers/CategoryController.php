@@ -15,11 +15,23 @@ class CategoryController extends Controller
     /**
      * Hiển thị danh sách danh mục
      */
-    public function index()
+    public function index(Request $request)
     {
         // Lấy danh sách, kèm theo số lượng sản phẩm bên trong mỗi danh mục
-        $categories = Category::withCount('products')->orderBy('ngaytao', 'desc')->paginate(10);
-        return view('admin.categories.index', compact('categories'));
+        // 1. Khởi tạo câu truy vấn gốc (Lấy danh sách kèm số lượng sản phẩm)
+    $query = Category::withCount('products');
+
+    // 2. Nếu có từ khóa tìm kiếm được gửi lên thì mới lọc
+    if ($request->has('keyword') && $request->keyword != '') {
+        $keyword = $request->keyword;
+        // Tìm những danh mục có tên chứa từ khóa
+        $query->where('ten', 'like', '%' . $keyword . '%');
+    }
+
+    // 3. Sắp xếp, phân trang và THÊM withQueryString() để giữ từ khóa khi sang trang 2, 3...
+    $categories = $query->orderBy('ngaytao', 'desc')->paginate(10)->withQueryString();
+
+    return view('admin.categories.index', compact('categories'));
     }
 
     /**

@@ -9,8 +9,8 @@
         <div class="topbar-divider d-none d-sm-block"></div>
 
         <li class="nav-item dropdown no-arrow">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
                     @if(Auth::check())
                         {{ Auth::user()->hoten ?? Auth::user()->ten ?? 'Admin' }}
@@ -18,7 +18,9 @@
                         Admin
                     @endif
                 </span>
-                <img class="img-profile rounded-circle" src="{{ asset('admin/img/undraw_profile.svg') }}">
+                <img class="img-profile rounded-circle"
+                    src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->hoten ?? Auth::user()->ten ?? 'Admin') }}&background=4e73df&color=ffffff&size=100"
+                    alt="Admin Avatar">
             </a>
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="#">
