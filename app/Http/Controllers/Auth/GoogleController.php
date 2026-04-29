@@ -18,6 +18,7 @@ class GoogleController extends Controller
     }
 
     // Xử lý dữ liệu Google trả về
+    // Xử lý dữ liệu Google trả về
     public function callback()
     {
         try {
@@ -29,29 +30,31 @@ class GoogleController extends Controller
 
             if ($user) {
                 // Nếu đã có tài khoản (có thể trước đó họ đăng ký bằng form)
-                // Thì cập nhật google_id cho họ và cho đăng nhập luôn
+                // Cập nhật googleID (gọi đúng tên cột trong DB)
                 $user->update([
-                    'google_id' => $googleUser->getId(),
+                    'googleID' => $googleUser->getId(),
                 ]);
                 Auth::login($user);
             } else {
-                // Nếu chưa từng có tài khoản, tự động tạo mới
+                // SỬA LỖI Ở ĐÂY: Dùng đúng tên cột vật lý trong Database để Laravel không bị lú
                 $newUser = User::create([
-                    'name' => $googleUser->getName(),
+                    'hoten' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
-                    'google_id' => $googleUser->getId(),
-                    'password' => Str::random(16), // Mật khẩu ngẫu nhiên, cast 'hashed' sẽ tự động hash
-                    'role' => 0,
+                    'googleID' => $googleUser->getId(),
+                    // Dùng Hash::make thay vì mong chờ tính năng cast tự động khi dùng alias
+                    'matkhau' => \Illuminate\Support\Facades\Hash::make(Str::random(16)), 
+                    'vaitro' => 0,
+                    'trangthai' => 1, // PHẢI CÓ CÁI NÀY: 1 = Đang hoạt động, nếu thiếu nó sẽ rớt vào trường hợp tài khoản bị khóa ở AuthenticatedSessionController
                 ]);
                 Auth::login($newUser);
             }
 
-            // Đăng nhập xong đẩy về trang Dashboard hoặc Trang chủ
+            // Đăng nhập xong đẩy về trang chủ
             return redirect()->route('home');
 
         } catch (\Exception $e) {
-            // Nếu có lỗi (khách hủy không đăng nhập nữa), đẩy về lại trang đăng nhập
-            return redirect()->route('login')->with('error', 'Đăng nhập Google thất bại!');
+            // Nếu có lỗi, đẩy về lại trang đăng nhập (tôi thêm dòng hiển thị chi tiết lỗi để ông bạn dễ debug nếu vẫn xịt)
+            return redirect()->route('login')->withErrors(['email' => 'Đăng nhập Google thất bại: ' . $e->getMessage()]);
         }
     }
 }

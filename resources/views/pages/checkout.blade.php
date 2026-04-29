@@ -67,32 +67,59 @@
                                 <i class="fas fa-credit-card text-primary me-2"></i> Phương thức thanh toán
                             </h5>
 
-                            <div class="form-check p-3 border rounded mb-3 bg-white hover-shadow transition-all">
-                                <input class="form-check-input ms-1" type="radio" name="phuongthucthanhtoan"
-                                    id="paymentCOD" value="COD" checked>
-                                <label class="form-check-label ms-3 w-100 cursor-pointer d-flex align-items-center"
-                                    for="paymentCOD">
-                                    <i class="fas fa-money-bill-wave text-success fa-2x me-3"></i>
+                            <label
+                                class="border rounded p-3 mb-3 bg-white d-flex align-items-center w-100 payment-card shadow-sm"
+                                for="paymentCOD" style="cursor: pointer; transition: all 0.2s ease;">
+                                <div class="m-0 p-0 d-flex align-items-center">
+                                    <input class="form-check-input fs-4 m-0 border-secondary" type="radio"
+                                        name="phuongthucthanhtoan" id="paymentCOD" value="COD" checked
+                                        style="cursor: pointer;">
+                                </div>
+
+                                <div class="d-flex align-items-center ms-3 w-100">
+                                    <div class="text-success me-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                                            <circle cx="12" cy="12" r="2"></circle>
+                                            <path d="M6 12h.01M18 12h.01"></path>
+                                        </svg>
+                                    </div>
                                     <div>
-                                        <span class="fw-bold d-block">Thanh toán khi nhận hàng (COD)</span>
+                                        <span class="fw-bold d-block text-primary" style="font-size: 1.05rem;">Thanh
+                                            toán khi nhận hàng (COD)</span>
                                         <small class="text-muted">Nhận hàng, kiểm tra rồi mới thanh toán.</small>
                                     </div>
-                                </label>
-                            </div>
+                                </div>
+                            </label>
 
-                            <div class="form-check p-3 border rounded bg-white hover-shadow transition-all">
-                                <input class="form-check-input ms-1" type="radio" name="phuongthucthanhtoan"
-                                    id="paymentVNPAY" value="VNPAY">
-                                <label class="form-check-label ms-3 w-100 cursor-pointer d-flex align-items-center"
-                                    for="paymentVNPAY">
-                                    <img src="https://vnpay.vn/s1/vnpay/assets/images/logo-icon/logo-primary.svg"
-                                        alt="VNPay" height="30" class="me-3">
+                            <label
+                                class="border rounded p-3 mb-3 bg-white d-flex align-items-center w-100 payment-card shadow-sm"
+                                for="paymentVNPAY" style="cursor: pointer; transition: all 0.2s ease;">
+                                <div class="m-0 p-0 d-flex align-items-center">
+                                    <input class="form-check-input fs-4 m-0 border-secondary" type="radio"
+                                        name="phuongthucthanhtoan" id="paymentVNPAY" value="VNPAY"
+                                        style="cursor: pointer;">
+                                </div>
+
+                                <div class="d-flex align-items-center ms-3 w-100">
+                                    <div class="me-3 bg-light rounded px-2 py-1 border">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="65" height="24"
+                                            viewBox="0 0 80 24">
+                                            <text x="0" y="19" font-family="Arial, sans-serif" font-weight="900"
+                                                font-size="22" fill="#005BAA" letter-spacing="-1">VN</text>
+                                            <text x="31" y="19" font-family="Arial, sans-serif" font-weight="900"
+                                                font-size="22" fill="#ED1C24" letter-spacing="-1">PAY</text>
+                                        </svg>
+                                    </div>
                                     <div>
-                                        <span class="fw-bold d-block">Thanh toán qua VNPAY</span>
+                                        <span class="fw-bold d-block text-primary" style="font-size: 1.05rem;">Thanh
+                                            toán qua VNPAY</span>
                                         <small class="text-muted">Quét mã QR, Thẻ ATM nội địa, Thẻ quốc tế.</small>
                                     </div>
-                                </label>
-                            </div>
+                                </div>
+                            </label>
                         </div>
                     </div>
                 </div>
