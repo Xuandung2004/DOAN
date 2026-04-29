@@ -49,9 +49,7 @@ Route::get('/products', [ProductController::class, 'shop'])->name('products');
 Route::get('/product/{slug}', [ProductController::class, 'detail'])->name('product.detail');
 // Pages routes
 
-Route::get('/promotions', function () {
-    return view('pages.promotions');
-})->name('promotions');
+Route::get('/promotions', [HomeController::class, 'promotions'])->name('promotions');
 
 Route::get('/contact', function () {
     return view('pages.contact');

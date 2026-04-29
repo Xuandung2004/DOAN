@@ -36,4 +36,15 @@ class HomeController extends Controller
 
         return view('layouts.home', compact('newProducts', 'bestSellers', 'suggestedProducts', 'wishlistIds'));
     }
+    public function promotions()
+{
+    // Lấy các mã chưa hết hạn và chưa hết lượt dùng
+    $coupons = \App\Models\Coupon::where(function($q) {
+                                    $q->whereNull('hethan')->orWhere('hethan', '>', now());
+                                 })
+                                 ->where('dasudung', '<', \Illuminate\Support\Facades\DB::raw('gioihansudung'))
+                                 ->get();
+
+    return view('pages.promotions', compact('coupons'));
+}
 }

@@ -4,7 +4,7 @@
             <div class="col-md-3 col-sm-6">
                 <div class="footer-menu footer-menu-001">
                     <div class="footer-intro mb-4">
-                        <a href="index.html">
+                        <a href="{{ route('home') }}">
                             <img src="{{ asset('images/main-logo.png') }}" alt="logo">
                         </a>
                     </div>
@@ -56,19 +56,19 @@
                     <h5 class="widget-title text-uppercase mb-4">Liên Kết Nhanh</h5>
                     <ul class="menu-list list-unstyled text-uppercase border-animation-left fs-6">
                         <li class="menu-item">
-                            <a href="index.html" class="item-anchor">Trang Chủ</a>
+                            <a href="{{ route('home') }}" class="item-anchor">Trang Chủ</a>
                         </li>
                         <li class="menu-item">
-                            <a href="index.html" class="item-anchor">Sản phẩm</a>
+                            <a href="{{ route('products') }}" class="item-anchor">Sản phẩm</a>
                         </li>
                         <li class="menu-item">
-                            <a href="blog.html" class="item-anchor">Liên hệ</a>
+                            <a href="{{ route('contact') }}" class="item-anchor">Liên hệ</a>
                         </li>
                         <li class="menu-item">
-                            <a href="styles.html" class="item-anchor">Khuyến Mãi</a>
+                            <a href="{{ route('promotions') }}" class="item-anchor">Khuyến Mãi</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#" class="item-anchor">Góc Của Mẹ</a>
+                            <a href="{{ route('cart') }}" class="item-anchor">Giỏ Hàng</a>
                         </li>
                     </ul>
                 </div>
@@ -78,22 +78,26 @@
                     <h5 class="widget-title text-uppercase mb-4">Chăm Sóc Khách Hàng</h5>
                     <ul class="menu-list list-unstyled text-uppercase border-animation-left fs-6">
                         <li class="menu-item">
-                            <a href="#" class="item-anchor">Tra Cứu Đơn Hàng</a>
+                            @auth
+                                <a href="{{ route('orders.history') }}" class="item-anchor">Tra Cứu Đơn Hàng</a>
+                            @else
+                                <a href="{{ route('login') }}" class="item-anchor">Tra Cứu Đơn Hàng</a>
+                            @endauth
                         </li>
                         <li class="menu-item">
-                            <a href="#" class="item-anchor">Chính Sách Đổi Trả</a>
+                            <a href="{{ route('contact') }}" class="item-anchor">Chính Sách Đổi Trả</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#" class="item-anchor">Chính Sách Giao Hàng</a>
+                            <a href="{{ route('contact') }}" class="item-anchor">Chính Sách Giao Hàng</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#" class="item-anchor">Liên Hệ Hỗ Trợ</a>
+                            <a href="{{ route('contact') }}" class="item-anchor">Liên Hệ Hỗ Trợ</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#" class="item-anchor">Hệ Thống Cửa Hàng</a>
+                            <a href="{{ route('contact') }}" class="item-anchor">Hệ Thống Cửa Hàng</a>
                         </li>
                         <li class="menu-item">
-                            <a href="index.html" class="item-anchor">Câu Hỏi Thường Gặp</a>
+                            <a href="{{ route('contact') }}" class="item-anchor">Câu Hỏi Thường Gặp</a>
                         </li>
                     </ul>
                 </div>
