@@ -16,6 +16,7 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\HomeController;
 
 // Giỏ hàng
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
@@ -36,9 +37,7 @@ Route::get('/vnpay-return', [CheckoutController::class, 'vnpayReturn'])->name('v
 Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
 // Trang chủ
-Route::get('/', function () {
-    return view('layouts.home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // ==========================================
 // PRODUCT ROUTES (FRONTEND)

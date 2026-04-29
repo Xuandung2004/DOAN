@@ -74,17 +74,26 @@ class ProductController extends Controller
         ]);
 
         // Xử lý upload NHIỀU ẢNH cùng lúc
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                // Lưu vào thư mục storage/app/public/products
-                $path = $file->store('products', 'public'); 
-                
-                ProductImage::create([
-                    'sanphamID'   => $product->id,
-                    'duongdananh' => 'storage/' . $path
-                ]);
-            }
+          if ($request->hasFile('images')) {
+    foreach ($request->file('images') as $file) {
+        // 1. Lấy tên gốc của file ảnh
+        $filename = $file->getClientOriginalName();
+        
+        // 2. Định nghĩa đường dẫn đích trong thư mục public/images
+        $destinationPath = public_path('images');
+
+        // 3. Kiểm tra nếu file chưa tồn tại thì mới di chuyển vào thư mục
+        if (!file_exists($destinationPath . '/' . $filename)) {
+            $file->move($destinationPath, $filename);
         }
+
+        // 4. Lưu vào Database đường dẫn tương ứng để hiển thị (bỏ chữ storage/)
+        ProductImage::create([
+            'sanphamID'   => $product->id,
+            'duongdananh' => 'images/' . $filename
+        ]);
+    }
+}
 
         return redirect()->route('products.index')->with('thongbao', 'Thêm sản phẩm thành công!');
     }
@@ -130,10 +139,17 @@ class ProductController extends Controller
         // Xử lý upload ảnh bổ sung (nếu có chọn thêm ảnh)
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                $path = $file->store('products', 'public'); 
+                // Đổi sang logic lưu vào public/images giống hệt hàm store
+                $filename = $file->getClientOriginalName();
+                $destinationPath = public_path('images');
+
+                if (!file_exists($destinationPath . '/' . $filename)) {
+                    $file->move($destinationPath, $filename);
+                }
+
                 ProductImage::create([
                     'sanphamID'   => $product->id,
-                    'duongdananh' => 'storage/' . $path
+                    'duongdananh' => 'images/' . $filename
                 ]);
             }
         }
@@ -175,13 +191,13 @@ class ProductController extends Controller
     {
         $image = ProductImage::findOrFail($imageId);
         
-        // Xóa file vật lý trong thư mục storage
-        $relativePath = str_replace('storage/', '', $image->duongdananh);
-        if (Storage::disk('public')->exists($relativePath)) {
-            Storage::disk('public')->delete($relativePath);
+        // 1. Tìm và xóa file vật lý thật sự nằm trong thư mục public/images
+        $imagePath = public_path($image->duongdananh); // Lấy đường dẫn tuyệt đối trên ổ cứng
+        if (file_exists($imagePath)) {
+            unlink($imagePath); // Dùng lệnh unlink thuần của PHP để xóa file rác
         }
 
-        // Xóa record trong DB
+        // 2. Xóa record (dòng dữ liệu) trong Database
         $image->delete();
 
         return back()->with('thongbao', 'Đã xóa ảnh thành công!');

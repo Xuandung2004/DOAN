@@ -186,14 +186,15 @@
                 <div class="col-md-4">
                     <div class="cat-item image-zoom-effect">
                         <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/cat-item1.jpg') }}" alt="categories"
+                            <a href="products?danhmuc=1">
+                                <img src="{{ asset('images/betrai1.1.jpg') }}" alt="categories"
                                     class="product-image img-fluid">
                             </a>
                         </div>
                         <div class="category-content">
                             <div class="product-button">
-                                <a href="index.html" class="btn btn-common text-uppercase">Thời trang bé trai</a>
+                                <a href="products?danhmuc=1" class="btn btn-common text-uppercase">Thời trang bé
+                                    trai</a>
                             </div>
                         </div>
                     </div>
@@ -201,14 +202,14 @@
                 <div class="col-md-4">
                     <div class="cat-item image-zoom-effect">
                         <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/cat-item2.jpg') }}" alt="categories"
+                            <a href="products?danhmuc=2">
+                                <img src="{{ asset('images/begai3.2.jpg') }}" alt="categories"
                                     class="product-image img-fluid">
                             </a>
                         </div>
                         <div class="category-content">
                             <div class="product-button">
-                                <a href="index.html" class="btn btn-common text-uppercase">Thời trang bé gái</a>
+                                <a href="products?danhmuc=2" class="btn btn-common text-uppercase">Thời trang bé gái</a>
                             </div>
                         </div>
                     </div>
@@ -216,14 +217,14 @@
                 <div class="col-md-4">
                     <div class="cat-item image-zoom-effect">
                         <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/cat-item3.jpg') }}" alt="categories"
+                            <a href="products?danhmuc=4">
+                                <img src="{{ asset('images/phukien5.2.jpg') }}" alt="categories"
                                     class="product-image img-fluid">
                             </a>
                         </div>
                         <div class="category-content">
                             <div class="product-button">
-                                <a href="index.html" class="btn btn-common text-uppercase">Phụ kiện cho bé</a>
+                                <a href="products?danhmuc=4" class="btn btn-common text-uppercase">Phụ kiện cho bé</a>
                             </div>
                         </div>
                     </div>
@@ -237,126 +238,43 @@
     <div class="container">
         <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
             <h4 class="text-uppercase">Hàng Mới Về</h4>
-            <a href="index.html" class="btn-link">Xem tất cả sản phẩm</a>
+            <a href="{{ url('/products') }}" class="btn-link">Xem tất cả sản phẩm</a>
         </div>
         <div class="swiper product-swiper open-up" data-aos="zoom-out">
             <div class="swiper-wrapper d-flex">
+                @foreach($newProducts as $product)
+                    <div class="swiper-slide">
+                        <div class="product-item image-zoom-effect link-effect">
+                            <div class="image-holder position-relative">
+                                <a href="{{ url('/products/' . $product->duongdan) }}">
+                                    @if($product->images->isNotEmpty())
+                                        <img src="{{ asset($product->images->first()->duongdananh) }}" alt="{{ $product->ten }}"
+                                            class="product-image img-fluid">
+                                    @else
+                                        <img src="{{ asset('images/default-product.jpg') }}" alt="No image"
+                                            class="product-image img-fluid">
+                                    @endif
+                                </a>
+                                <a href="javascript:void(0)"
+                                    class="btn-icon btn-wishlist toggle-wishlist {{ in_array($product->id, $wishlistIds) ? 'text-danger' : '' }}"
+                                    data-id="{{ $product->id }}">
 
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder position-relative">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-1.jpg') }}" alt="categories"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="element-title text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Áo liền quần họa tiết</a>
-                                </h5>
-                                <a href="#" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>150.000đ</span></a>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                        <use xlink:href="#heart"></use>
+                                    </svg>
+                                </a>
+                                <div class="product-content">
+                                    <h5 class="element-title text-uppercase fs-5 mt-3">
+                                        <a href="{{ url('/products/' . $product->duongdan) }}">{{ $product->ten }}</a>
+                                    </h5>
+                                    <a href="#" class="text-decoration-none" data-after="Thêm vào giỏ">
+                                        <span>{{ number_format($product->gia, 0, ',', '.') }}đ</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder position-relative">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-2.jpg') }}" alt="categories"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Áo thun form rộng</a>
-                                </h5>
-                                <a href="#" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>95.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder position-relative">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-3.jpg') }}" alt="categories"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Áo sơ mi cotton trắng</a>
-                                </h5>
-                                <a href="#" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>120.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder position-relative">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-4.jpg') }}" alt="categories"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Áo khoác thu đông</a>
-                                </h5>
-                                <a href="#" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>250.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder position-relative">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-10.jpg') }}" alt="categories"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Váy yếm caro</a>
-                                </h5>
-                                <a href="#" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>180.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                @endforeach
             </div>
             <div class="swiper-pagination"></div>
         </div>
@@ -376,8 +294,7 @@
             <div class="collection-item d-flex flex-wrap my-5">
                 <div class="col-md-6 column-container">
                     <div class="image-holder">
-                        <img src="{{ asset('images/single-image-2.jpg') }}" alt="collection"
-                            class="product-image img-fluid">
+                        <img src="{{ asset('images/sanpham3.jpg') }}" alt="collection" class="product-image img-fluid">
                     </div>
                 </div>
                 <div class="col-md-6 column-container bg-white">
@@ -399,149 +316,43 @@
     <div class="container">
         <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
             <h4 class="text-uppercase">Sản Phẩm Bán Chạy</h4>
-            <a href="index.html" class="btn-link">Xem tất cả sản phẩm</a>
+            <a href="{{ url('/products') }}" class="btn-link">Xem tất cả sản phẩm</a>
         </div>
         <div class="swiper product-swiper open-up" data-aos="zoom-out">
             <div class="swiper-wrapper d-flex">
+                @foreach($bestSellers as $product)
+                    <div class="swiper-slide">
+                        <div class="product-item image-zoom-effect link-effect">
+                            <div class="image-holder">
+                                <a href="{{ url('/products/' . $product->duongdan) }}">
+                                    @if($product->images->isNotEmpty())
+                                        <img src="{{ asset($product->images->first()->duongdananh) }}" alt="{{ $product->ten }}"
+                                            class="product-image img-fluid">
+                                    @else
+                                        <img src="{{ asset('images/default-product.jpg') }}" alt="No image"
+                                            class="product-image img-fluid">
+                                    @endif
+                                </a>
+                                <a href="javascript:void(0)"
+                                    class="btn-icon btn-wishlist toggle-wishlist {{ in_array($product->id, $wishlistIds) ? 'text-danger' : '' }}"
+                                    data-id="{{ $product->id }}">
 
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-4.jpg') }}" alt="categories"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Áo thun kẻ sọc tay dài</a>
-                                </h5>
-                                <a href="index.html" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>145.000đ</span></a>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                        <use xlink:href="#heart"></use>
+                                    </svg>
+                                </a>
+                                <div class="product-content">
+                                    <h5 class="text-uppercase fs-5 mt-3">
+                                        <a href="{{ url('/products/' . $product->duongdan) }}">{{ $product->ten }}</a>
+                                    </h5>
+                                    <a href="#" class="text-decoration-none" data-after="Thêm vào giỏ">
+                                        <span>{{ number_format($product->gia, 0, ',', '.') }}đ</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-3.jpg') }}" alt="product"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Bộ đồ mặc nhà vải lanh</a>
-                                </h5>
-                                <a href="index.html" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>125.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-5.jpg') }}" alt="categories"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Váy xòe công chúa dự tiệc</a>
-                                </h5>
-                                <a href="index.html" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>290.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-6.jpg') }}" alt="categories"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Áo khoác gile bông</a>
-                                </h5>
-                                <a href="index.html" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>180.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-9.jpg') }}" alt="categories"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Quần jeans yếm bé trai</a>
-                                </h5>
-                                <a href="index.html" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>210.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-10.jpg') }}" alt="categories"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Set mũ len và khăn quàng</a>
-                                </h5>
-                                <a href="index.html" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>110.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                @endforeach
             </div>
             <div class="swiper-pagination"></div>
         </div>
@@ -628,125 +439,43 @@
     <div class="container">
         <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
             <h4 class="text-uppercase">Có Thể Bé Sẽ Thích</h4>
-            <a href="index.html" class="btn-link">Xem tất cả sản phẩm</a>
+            <a href="{{ url('/products') }}" class="btn-link">Xem tất cả sản phẩm</a>
         </div>
         <div class="swiper product-swiper open-up" data-aos="zoom-out">
             <div class="swiper-wrapper d-flex">
+                @foreach($suggestedProducts as $product)
+                    <div class="swiper-slide">
+                        <div class="product-item image-zoom-effect link-effect">
+                            <div class="image-holder">
+                                <a href="{{ url('/products/' . $product->duongdan) }}">
+                                    @if($product->images->isNotEmpty())
+                                        <img src="{{ asset($product->images->first()->duongdananh) }}" alt="{{ $product->ten }}"
+                                            class="product-image img-fluid">
+                                    @else
+                                        <img src="{{ asset('images/default-product.jpg') }}" alt="No image"
+                                            class="product-image img-fluid">
+                                    @endif
+                                </a>
+                                <a href="javascript:void(0)"
+                                    class="btn-icon btn-wishlist toggle-wishlist {{ in_array($product->id, $wishlistIds) ? 'text-danger' : '' }}"
+                                    data-id="{{ $product->id }}">
 
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-5.jpg') }}" alt="product"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Bộ đồ gấu nhí</a>
-                                </h5>
-                                <a href="index.html" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>150.000đ</span></a>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                        <use xlink:href="#heart"></use>
+                                    </svg>
+                                </a>
+                                <div class="product-content">
+                                    <h5 class="text-uppercase fs-5 mt-3">
+                                        <a href="{{ url('/products/' . $product->duongdan) }}">{{ $product->ten }}</a>
+                                    </h5>
+                                    <a href="#" class="text-decoration-none" data-after="Thêm vào giỏ">
+                                        <span>{{ number_format($product->gia, 0, ',', '.') }}đ</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-6.jpg') }}" alt="product"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Áo phông khủng long</a>
-                                </h5>
-                                <a href="index.html" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>85.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-7.jpg') }}" alt="product"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Quần đùi thun mềm</a>
-                                </h5>
-                                <a href="index.html" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>65.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-8.jpg') }}" alt="product"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Giày lười cho bé</a>
-                                </h5>
-                                <a href="index.html" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>190.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="product-item image-zoom-effect link-effect">
-                        <div class="image-holder">
-                            <a href="index.html">
-                                <img src="{{ asset('images/product-item-1.jpg') }}" alt="product"
-                                    class="product-image img-fluid">
-                            </a>
-                            <a href="index.html" class="btn-icon btn-wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <use xlink:href="#heart"></use>
-                                </svg>
-                            </a>
-                            <div class="product-content">
-                                <h5 class="text-uppercase fs-5 mt-3">
-                                    <a href="index.html">Túi xách thỏ bông</a>
-                                </h5>
-                                <a href="index.html" class="text-decoration-none"
-                                    data-after="Thêm vào giỏ"><span>120.000đ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
             <div class="swiper-pagination"></div>
         </div>
@@ -756,83 +485,6 @@
         <div class="icon-arrow icon-arrow-right"><svg width="50" height="50" viewBox="0 0 24 24">
                 <use xlink:href="#arrow-right"></use>
             </svg></div>
-    </div>
-</section>
-<section class="blog py-5">
-    <div class="container">
-        <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
-            <h4 class="text-uppercase">Góc Của Mẹ & Bé</h4>
-            <a href="index.html" class="btn-link">Xem tất cả bài viết</a>
-        </div>
-        <div class="row">
-
-            <div class="col-md-4">
-                <article class="post-item">
-                    <div class="post-image">
-                        <a href="index.html">
-                            <img src="{{ asset('images/post-image1.jpg') }}" alt="image"
-                                class="post-grid-image img-fluid">
-                        </a>
-                    </div>
-                    <div class="post-content d-flex flex-wrap gap-2 my-3">
-                        <div class="post-meta text-uppercase fs-6 text-secondary">
-                            <span class="post-category">Mẹo chọn đồ /</span>
-                            <span class="meta-day"> 15 thg 4, 2026</span>
-                        </div>
-                        <h5 class="post-title text-uppercase">
-                            <a href="index.html">Cách chọn chất liệu vải an toàn cho da trẻ sơ sinh</a>
-                        </h5>
-                        <p>Làn da của bé vô cùng nhạy cảm. Việc chọn sai chất liệu có thể gây mẩn ngứa. Cùng tìm hiểu
-                            các loại vải cotton hữu cơ tốt nhất...</p>
-                    </div>
-                </article>
-            </div>
-
-            <div class="col-md-4">
-                <article class="post-item">
-                    <div class="post-image">
-                        <a href="index.html">
-                            <img src="{{ asset('images/post-image2.jpg') }}" alt="image"
-                                class="post-grid-image img-fluid">
-                        </a>
-                    </div>
-                    <div class="post-content d-flex flex-wrap gap-2 my-3">
-                        <div class="post-meta text-uppercase fs-6 text-secondary">
-                            <span class="post-category">Xu hướng /</span>
-                            <span class="meta-day"> 10 thg 4, 2026</span>
-                        </div>
-                        <h5 class="post-title text-uppercase">
-                            <a href="index.html">Top 5 xu hướng thời trang bé gái mùa hè năm nay</a>
-                        </h5>
-                        <p>Từ những chiếc váy họa tiết hoa nhí đáng yêu đến set đồ năng động đi biển. Điểm danh ngay
-                            những món đồ không thể thiếu...</p>
-                    </div>
-                </article>
-            </div>
-
-            <div class="col-md-4">
-                <article class="post-item">
-                    <div class="post-image">
-                        <a href="index.html">
-                            <img src="{{ asset('images/post-image3.jpg') }}" alt="image"
-                                class="post-grid-image img-fluid">
-                        </a>
-                    </div>
-                    <div class="post-content d-flex flex-wrap gap-2 my-3">
-                        <div class="post-meta text-uppercase fs-6 text-secondary">
-                            <span class="post-category">Cẩm nang /</span>
-                            <span class="meta-day"> 02 thg 4, 2026</span>
-                        </div>
-                        <h5 class="post-title text-uppercase">
-                            <a href="index.html">Bảng quy đổi size quần áo trẻ em chuẩn nhất</a>
-                        </h5>
-                        <p>Các mẹ thường đau đầu vì mua đồ online bị sai kích cỡ? Hãy lưu ngay bảng chiều cao, cân nặng
-                            và size quần áo chuẩn này lại nhé...</p>
-                    </div>
-                </article>
-            </div>
-
-        </div>
     </div>
 </section>
 <section class="logo-bar py-5 my-5">
@@ -866,57 +518,64 @@
     </div>
 </section>
 
-<section class="instagram position-relative">
-    <div class="d-flex justify-content-center w-100 position-absolute bottom-0 z-1">
-        <a href="https://www.instagram.com/templatesjungle/" class="btn btn-dark px-5">Theo dõi chúng tôi trên
-            Instagram</a>
-    </div>
-    <div class="row g-0">
-        <div class="col-6 col-sm-4 col-md-2">
-            <div class="insta-item">
-                <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-                    <img src="{{ asset('images/insta-item1.jpg') }}" alt="instagram" class="insta-image img-fluid">
-                </a>
-            </div>
-        </div>
-        <div class="col-6 col-sm-4 col-md-2">
-            <div class="insta-item">
-                <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-                    <img src="{{ asset('images/insta-item2.jpg') }}" alt="instagram" class="insta-image img-fluid">
-                </a>
-            </div>
-        </div>
-        <div class="col-6 col-sm-4 col-md-2">
-            <div class="insta-item">
-                <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-                    <img src="{{ asset('images/insta-item3.jpg') }}" alt="instagram" class="insta-image img-fluid">
-                </a>
-            </div>
-        </div>
-        <div class="col-6 col-sm-4 col-md-2">
-            <div class="insta-item">
-                <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-                    <img src="{{ asset('images/insta-item4.jpg') }}" alt="instagram" class="insta-image img-fluid">
-                </a>
-            </div>
-        </div>
-        <div class="col-6 col-sm-4 col-md-2">
-            <div class="insta-item">
-                <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-                    <img src="{{ asset('images/insta-item5.jpg') }}" alt="instagram" class="insta-image img-fluid">
-                </a>
-            </div>
-        </div>
-        <div class="col-6 col-sm-4 col-md-2">
-            <div class="insta-item">
-                <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-                    <img src="{{ asset('images/insta-item6.jpg') }}" alt="instagram" class="insta-image img-fluid">
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Tìm tất cả các nút trái tim trên màn hình
+        let wishlistButtons = document.querySelectorAll('.toggle-wishlist');
+
+        wishlistButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault(); // Ngăn chặn web nhảy lên đầu trang
+
+                let sanphamId = this.getAttribute('data-id');
+                let heartBtn = this; // Lưu lại cái nút vừa bị bấm
+                let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                // Bắn tín hiệu siêu tốc (AJAX) lên Controller
+                fetch('{{ route("wishlist.toggle") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({ sanpham_id: sanphamId })
+                })
+                    .then(response => {
+                        if (response.status === 401) { // Bắt lỗi chưa đăng nhập
+                            alert('Vui lòng đăng nhập để sử dụng chức năng này!');
+                            window.location.href = '{{ route("login") }}';
+                            throw new Error('Chưa đăng nhập');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // 1. ĐỔI MÀU TRÁI TIM TẠI CHỖ
+                        if (data.status === 'added') {
+                            heartBtn.classList.add('text-danger');
+                        } else if (data.status === 'removed') {
+                            heartBtn.classList.remove('text-danger');
+                        }
+
+                        // 2. CẬP NHẬT CON SỐ TRÊN HEADER NGAY LẬP TỨC
+                        let badgeHeader = document.getElementById('wishlistItemCount');
+                        if (badgeHeader && data.totalItems !== undefined) {
+                            badgeHeader.innerText = data.totalItems;
+
+                            // (Hiệu ứng thêm cho sinh động: Nháy nháy cái số cho khách hàng biết)
+                            badgeHeader.classList.add('animate__animated', 'animate__rubberBand');
+                            setTimeout(() => {
+                                badgeHeader.classList.remove('animate__animated', 'animate__rubberBand');
+                            }, 1000);
+                        }
+                    })
+                    .catch(error => console.error('Lỗi khi thao tác Wishlist:', error));
+            });
+        });
+    });
+</script>
 <!-- ==========================================
      KẾT THÚC PHẦN NỘI DUNG (CONTENT)
 =========================================== -->
