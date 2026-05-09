@@ -112,18 +112,18 @@ class CartController extends Controller
             'soluong' => 'required|integer|min:1'
         ]);
 
-        $user = \Illuminate\Support\Facades\Auth::user();
-        $cart = \App\Models\Cart::where('nguoidungID', $user->id)->first();
+        $user = Auth::user();
+        $cart = Cart::where('nguoidungID', $user->id)->first();
 
         if (!$cart) return response()->json(['status' => 'error', 'message' => 'Giỏ hàng trống']);
 
-        $cartItem = \App\Models\CartItem::where('giohangID', $cart->id)
+        $cartItem = CartItem::where('giohangID', $cart->id)
                                         ->where('sanphamID', $request->sanpham_id)
                                         ->first();
 
         if (!$cartItem) return response()->json(['status' => 'error', 'message' => 'Sản phẩm không tồn tại']);
 
-        $product = \App\Models\Product::find($request->sanpham_id);
+        $product = Product::find($request->sanpham_id);
         
         if ($request->soluong > $product->soluong) {
             return response()->json(['status' => 'error', 'message' => 'Sản phẩm trong kho chỉ còn ' . $product->soluong]);
@@ -148,7 +148,7 @@ class CartController extends Controller
         $thongBaoHuyMa = '';
         if (session()->has('coupon')) {
             $couponSession = session()->get('coupon');
-            $coupon = \App\Models\Coupon::find($couponSession['id']);
+            $coupon = Coupon::find($couponSession['id']);
 
             // Nếu đơn hàng vẫn đủ điều kiện tối thiểu thì tính lại tiền giảm
             if ($coupon && $tamTinh >= $coupon->giatridontoithieu) {
@@ -190,17 +190,17 @@ class CartController extends Controller
     // 2. HÀM XÓA SẢN PHẨM (Đã vá lỗi mã giảm giá)
     public function remove(Request $request)
     {
-        if (!\Illuminate\Support\Facades\Auth::check()) {
+        if (!Auth::check()) {
             return response()->json(['status' => 'error', 'message' => 'Vui lòng đăng nhập!'], 401);
         }
 
         $request->validate(['sanpham_id' => 'required']);
         $sanphamID = $request->sanpham_id;
 
-        $cart = \App\Models\Cart::where('nguoidungID', \Illuminate\Support\Facades\Auth::id())->first();
+        $cart = Cart::where('nguoidungID', Auth::id())->first();
 
         if ($cart) {
-            \App\Models\CartItem::where('giohangID', $cart->id)
+            CartItem::where('giohangID', $cart->id)
                     ->where('sanphamID', $sanphamID)
                     ->delete();
 
@@ -220,7 +220,7 @@ class CartController extends Controller
             $thongBaoHuyMa = '';
             if (session()->has('coupon')) {
                 $couponSession = session()->get('coupon');
-                $coupon = \App\Models\Coupon::find($couponSession['id']);
+                $coupon = Coupon::find($couponSession['id']);
 
                 if ($coupon && $tamTinh >= $coupon->giatridontoithieu) {
                     if ($coupon->loai == 'phantram') {

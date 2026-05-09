@@ -10,9 +10,9 @@
         </a>
     </div>
 
-    @if(session('thongbao'))
-        <div class="alert alert-success shadow-sm">{{ session('thongbao') }}</div>
-    @endif
+    {{-- @if(session('thongbao'))
+    <div class="alert alert-success shadow-sm">{{ session('thongbao') }}</div>
+    @endif --}}
 
     <div class="card shadow mb-4 border-bottom-primary">
         <div class="card-body">

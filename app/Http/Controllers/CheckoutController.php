@@ -273,7 +273,7 @@ class CheckoutController extends Controller
         $order = Order::find($orderId); 
 
         // 2. So sánh chữ ký để đảm bảo an toàn tuyệt đối
-        if ($secureHash == $vnp_SecureHash) {
+        if ($secureHash === $vnp_SecureHash) {
             // Mã 00 nghĩa là giao dịch thành công
             if ($_GET['vnp_ResponseCode'] == '00') {
                 

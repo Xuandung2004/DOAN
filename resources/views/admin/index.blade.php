@@ -87,89 +87,101 @@
 
     <div class="row mb-4">
         <div class="col-md-6 mb-3">
-            <div class="card shadow h-100">
-                <div class="card-header bg-white">
-                    <h6 class="m-0 font-weight-bold text-dark">Doanh thu khoảng</h6>
+            <div class="card shadow h-100 border-0">
+                <div class="card-header bg-white border-bottom-0 pt-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Doanh thu khoảng</h6>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.index') }}" method="GET"
                         class="d-flex align-items-end justify-content-between">
                         <input type="hidden" name="loai_loc" value="khoang">
                         <div class="mr-2 w-100">
-                            <label class="small text-muted">Ngày bắt đầu:</label>
-                            <input type="date" name="ngay_bat_dau" class="form-control" required>
+                            <label class="small text-muted mb-1">Ngày bắt đầu:</label>
+                            <input type="date" name="ngay_bat_dau" class="form-control form-control-sm" required>
                         </div>
                         <div class="mr-2 w-100">
-                            <label class="small text-muted">Ngày kết thúc:</label>
-                            <input type="date" name="ngay_ket_thuc" class="form-control" required>
+                            <label class="small text-muted mb-1">Ngày kết thúc:</label>
+                            <input type="date" name="ngay_ket_thuc" class="form-control form-control-sm" required>
                         </div>
-                        <button type="submit" class="btn btn-light border px-4">Xem tổng quan</button>
+                        <button type="submit" class="btn btn-primary btn-sm px-3 shadow-sm">
+                            <i class="fas fa-search mr-1"></i> Lọc
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
 
         <div class="col-md-6 mb-3">
-            <div class="card shadow h-100">
-                <div class="card-header bg-white">
-                    <h6 class="m-0 font-weight-bold text-dark">Doanh thu chi tiết năm</h6>
+            <div class="card shadow h-100 border-0">
+                <div class="card-header bg-white border-bottom-0 pt-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Doanh thu chi tiết năm</h6>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.index') }}" method="GET"
                         class="d-flex align-items-end justify-content-between">
                         <input type="hidden" name="loai_loc" value="nam">
                         <div class="mr-3 w-100">
-                            <label class="small text-muted">Năm (YYYY):</label>
-                            <input type="number" name="nam" class="form-control" value="{{ date('Y') }}" required>
+                            <label class="small text-muted mb-1">Năm (YYYY):</label>
+                            <input type="number" name="nam" class="form-control form-control-sm" value="{{ date('Y') }}"
+                                required>
                         </div>
-                        <button type="submit" class="btn btn-light border px-4">Xem chi tiết</button>
+                        <button type="submit" class="btn btn-primary btn-sm px-3 shadow-sm">
+                            <i class="fas fa-search mr-1"></i> Lọc
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
 
         <div class="col-md-6 mb-3">
-            <div class="card shadow h-100">
-                <div class="card-header bg-white">
-                    <h6 class="m-0 font-weight-bold text-dark">Doanh thu chi tiết tuần</h6>
+            <div class="card shadow h-100 border-0">
+                <div class="card-header bg-white border-bottom-0 pt-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Doanh thu chi tiết tuần</h6>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.index') }}" method="GET"
                         class="d-flex align-items-end justify-content-between">
                         <input type="hidden" name="loai_loc" value="tuan">
                         <div class="mr-2 w-100">
-                            <label class="small text-muted">Tuần (WW):</label>
-                            <input type="number" name="tuan" class="form-control" placeholder="VD: 46" required>
+                            <label class="small text-muted mb-1">Tuần (WW):</label>
+                            <input type="number" name="tuan" class="form-control form-control-sm" placeholder="VD: 46"
+                                required>
                         </div>
                         <div class="mr-2 w-100">
-                            <label class="small text-muted">Năm (YYYY):</label>
-                            <input type="number" name="nam" class="form-control" value="{{ date('Y') }}" required>
+                            <label class="small text-muted mb-1">Năm (YYYY):</label>
+                            <input type="number" name="nam" class="form-control form-control-sm" value="{{ date('Y') }}"
+                                required>
                         </div>
-                        <button type="submit" class="btn btn-light border px-4">Xem chi tiết</button>
+                        <button type="submit" class="btn btn-primary btn-sm px-3 shadow-sm">
+                            <i class="fas fa-search mr-1"></i> Lọc
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
 
         <div class="col-md-6 mb-3">
-            <div class="card shadow h-100">
-                <div class="card-header bg-white">
-                    <h6 class="m-0 font-weight-bold text-dark">Doanh thu chi tiết tháng</h6>
+            <div class="card shadow h-100 border-0">
+                <div class="card-header bg-white border-bottom-0 pt-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Doanh thu chi tiết tháng</h6>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.index') }}" method="GET"
                         class="d-flex align-items-end justify-content-between">
                         <input type="hidden" name="loai_loc" value="thang">
                         <div class="mr-2 w-100">
-                            <label class="small text-muted">Tháng (MM):</label>
-                            <input type="number" name="thang" class="form-control" min="1" max="12" value="{{ date('m') }}"
-                                required>
+                            <label class="small text-muted mb-1">Tháng (MM):</label>
+                            <input type="number" name="thang" class="form-control form-control-sm" min="1" max="12"
+                                value="{{ date('m') }}" required>
                         </div>
                         <div class="mr-2 w-100">
-                            <label class="small text-muted">Năm (YYYY):</label>
-                            <input type="number" name="nam" class="form-control" value="{{ date('Y') }}" required>
+                            <label class="small text-muted mb-1">Năm (YYYY):</label>
+                            <input type="number" name="nam" class="form-control form-control-sm" value="{{ date('Y') }}"
+                                required>
                         </div>
-                        <button type="submit" class="btn btn-light border px-4">Xem chi tiết</button>
+                        <button type="submit" class="btn btn-primary btn-sm px-3 shadow-sm">
+                            <i class="fas fa-search mr-1"></i> Lọc
+                        </button>
                     </form>
                 </div>
             </div>

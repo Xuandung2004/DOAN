@@ -246,7 +246,7 @@
                     <div class="swiper-slide">
                         <div class="product-item image-zoom-effect link-effect">
                             <div class="image-holder position-relative">
-                                <a href="{{ url('/products/' . $product->duongdan) }}">
+                                <a href="{{ url('product/' . $product->duongdan) }}">
                                     @if($product->images->isNotEmpty())
                                         <img src="{{ asset($product->images->first()->duongdananh) }}" alt="{{ $product->ten }}"
                                             class="product-image img-fluid">
@@ -265,9 +265,10 @@
                                 </a>
                                 <div class="product-content">
                                     <h5 class="element-title text-uppercase fs-5 mt-3">
-                                        <a href="{{ url('/products/' . $product->duongdan) }}">{{ $product->ten }}</a>
+                                        <a href="{{ url('product/' . $product->duongdan) }}">{{ $product->ten }}</a>
                                     </h5>
-                                    <a href="#" class="text-decoration-none" data-after="Thêm vào giỏ">
+                                    <a href="javascript:void(0)" class="text-decoration-none btn-add-cart"
+                                        data-id="{{ $product->id }}" data-after="Thêm vào giỏ">
                                         <span>{{ number_format($product->gia, 0, ',', '.') }}đ</span>
                                     </a>
                                 </div>
@@ -324,7 +325,7 @@
                     <div class="swiper-slide">
                         <div class="product-item image-zoom-effect link-effect">
                             <div class="image-holder">
-                                <a href="{{ url('/products/' . $product->duongdan) }}">
+                                <a href="{{ url('product/' . $product->duongdan) }}">
                                     @if($product->images->isNotEmpty())
                                         <img src="{{ asset($product->images->first()->duongdananh) }}" alt="{{ $product->ten }}"
                                             class="product-image img-fluid">
@@ -343,9 +344,10 @@
                                 </a>
                                 <div class="product-content">
                                     <h5 class="text-uppercase fs-5 mt-3">
-                                        <a href="{{ url('/products/' . $product->duongdan) }}">{{ $product->ten }}</a>
+                                        <a href="{{ url('product/' . $product->duongdan) }}">{{ $product->ten }}</a>
                                     </h5>
-                                    <a href="#" class="text-decoration-none" data-after="Thêm vào giỏ">
+                                    <a href="javascript:void(0)" class="text-decoration-none btn-add-cart"
+                                        data-id="{{ $product->id }}" data-after="Thêm vào giỏ">
                                         <span>{{ number_format($product->gia, 0, ',', '.') }}đ</span>
                                     </a>
                                 </div>
@@ -447,7 +449,7 @@
                     <div class="swiper-slide">
                         <div class="product-item image-zoom-effect link-effect">
                             <div class="image-holder">
-                                <a href="{{ url('/products/' . $product->duongdan) }}">
+                                <a href="{{ url('product/' . $product->duongdan) }}">
                                     @if($product->images->isNotEmpty())
                                         <img src="{{ asset($product->images->first()->duongdananh) }}" alt="{{ $product->ten }}"
                                             class="product-image img-fluid">
@@ -466,9 +468,10 @@
                                 </a>
                                 <div class="product-content">
                                     <h5 class="text-uppercase fs-5 mt-3">
-                                        <a href="{{ url('/products/' . $product->duongdan) }}">{{ $product->ten }}</a>
+                                        <a href="{{ url('product/' . $product->duongdan) }}">{{ $product->ten }}</a>
                                     </h5>
-                                    <a href="#" class="text-decoration-none" data-after="Thêm vào giỏ">
+                                    <a href="javascript:void(0)" class="text-decoration-none btn-add-cart"
+                                        data-id="{{ $product->id }}" data-after="Thêm vào giỏ">
                                         <span>{{ number_format($product->gia, 0, ',', '.') }}đ</span>
                                     </a>
                                 </div>
@@ -518,6 +521,8 @@
     </div>
 </section>
 
+<!-- GỌI PHẦN FOOTER -->
+@include('layouts.footer')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <script>
@@ -575,10 +580,65 @@
             });
         });
     });
+
+    $(document).ready(function () {
+        // ĐÃ SỬA: Dùng $(document).on('click', ...) để bắt sự kiện cho cả các phần tử sinh ra sau (Swiper clone)
+        $(document).on('click', '.btn-add-cart', function (e) {
+            e.preventDefault();
+
+            let productId = $(this).data('id');
+            let url = "{{ route('cart.add') }}";
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    sanpham_id: productId,
+                    soluong: 1
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
+                        // ĐÃ SỬA: Dùng Toast cho đẹp và xịn xò
+                        if (typeof showGlobalToast === "function") {
+                            showGlobalToast(response.message, 'success');
+                        } else {
+                            alert(response.message);
+                        }
+
+                        // Cập nhật số lượng giỏ hàng trên header
+                        let cartBadge = document.getElementById('cartItemCount');
+                        if (cartBadge) {
+                            cartBadge.innerText = response.totalItems;
+                        }
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        if (typeof showGlobalToast === "function") {
+                            showGlobalToast(xhr.responseJSON.message, 'error');
+                        } else {
+                            alert(xhr.responseJSON.message);
+                        }
+
+                        if (xhr.status === 401) {
+                            window.location.href = "{{ route('login') }}";
+                        }
+                    } else {
+                        if (typeof showGlobalToast === "function") {
+                            showGlobalToast('Có lỗi xảy ra hoặc bạn thao tác quá nhanh!', 'error');
+                        } else {
+                            alert('Có lỗi xảy ra hoặc bạn thao tác quá nhanh!');
+                        }
+                    }
+                }
+            });
+        });
+    });
 </script>
 <!-- ==========================================
      KẾT THÚC PHẦN NỘI DUNG (CONTENT)
 =========================================== -->
-
+{{--
 <!-- GỌI PHẦN FOOTER -->
-@include('layouts.footer')
+@include('layouts.footer') --}}

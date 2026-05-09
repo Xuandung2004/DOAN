@@ -7,11 +7,11 @@
         <h1 class="h3 mb-0 text-gray-800">Quản lý Đánh giá Khách hàng</h1>
     </div>
 
-    @if(session('thongbao'))
-        <div class="alert alert-success shadow-sm">
-            <i class="fas fa-check-circle mr-2"></i>{{ session('thongbao') }}
-        </div>
-    @endif
+    {{-- @if(session('thongbao'))
+    <div class="alert alert-success shadow-sm">
+        <i class="fas fa-check-circle mr-2"></i>{{ session('thongbao') }}
+    </div>
+    @endif --}}
 
     <div class="card shadow mb-4 border-bottom-primary">
         <div class="card-body">
