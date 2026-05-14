@@ -67,7 +67,18 @@ class DashboardController extends Controller
                     break;
                 case 'tuan':
                     // Xử lý logic lọc theo tuần nếu cần
-                    $tieuDe = "Tuần {$request->tuan}/{$request->nam}";
+                   $date = Carbon::now();
+    $date->setISODate($request->nam, $request->tuan); // Set mốc thời gian về Tuần và Năm người dùng nhập
+    
+    $ngayBatDau = $date->copy()->startOfWeek()->format('Y-m-d 00:00:00'); // Thứ 2
+    $ngayKetThuc = $date->copy()->endOfWeek()->format('Y-m-d 23:59:59');  // Chủ nhật
+
+    // Áp dụng điều kiện lọc vào Query
+    $queryDoanhThu->whereBetween('ngaytao', [$ngayBatDau, $ngayKetThuc]);
+    $querySoDon->whereBetween('ngaytao', [$ngayBatDau, $ngayKetThuc]);
+    
+    // Nâng cấp luôn cái tiêu đề cho hiển thị rõ ngày tháng (VD: Tuần 46/2026 (16/11 - 22/11))
+    $tieuDe = "Tuần {$request->tuan}/{$request->nam} (" . $date->copy()->startOfWeek()->format('d/m') . " - " . $date->copy()->endOfWeek()->format('d/m') . ")";
                     break;
             }
 
