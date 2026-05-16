@@ -269,7 +269,7 @@
                                     </h5>
                                     <a href="javascript:void(0)" class="text-decoration-none btn-add-cart"
                                         data-id="{{ $product->id }}" data-after="Thêm vào giỏ">
-                                        <span>{{ number_format($product->gia, 0, ',', '.') }}đ</span>
+                                        <span>{{ number_format($product->giagiam, 0, ',', '.') }}đ</span>
                                     </a>
                                 </div>
                             </div>
@@ -348,7 +348,7 @@
                                     </h5>
                                     <a href="javascript:void(0)" class="text-decoration-none btn-add-cart"
                                         data-id="{{ $product->id }}" data-after="Thêm vào giỏ">
-                                        <span>{{ number_format($product->gia, 0, ',', '.') }}đ</span>
+                                        <span>{{ number_format($product->giagiam, 0, ',', '.') }}đ</span>
                                     </a>
                                 </div>
                             </div>
@@ -472,7 +472,7 @@
                                     </h5>
                                     <a href="javascript:void(0)" class="text-decoration-none btn-add-cart"
                                         data-id="{{ $product->id }}" data-after="Thêm vào giỏ">
-                                        <span>{{ number_format($product->gia, 0, ',', '.') }}đ</span>
+                                        <span>{{ number_format($product->giagiam, 0, ',', '.') }}đ</span>
                                     </a>
                                 </div>
                             </div>

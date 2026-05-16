@@ -168,7 +168,7 @@ class CartController extends Controller
             } else {
                 // Nếu tiền tụt quá mức cho phép -> Hủy luôn mã giảm giá
                 session()->forget('coupon');
-                $thongBaoHuyMa = 'Mã giảm giá đã bị gỡ do tổng đơn không đủ điều kiện!';
+                //$thongBaoHuyMa = 'Mã giảm giá đã bị gỡ do tổng đơn không đủ điều kiện!';
             }
         }
         // -------------------------------------
@@ -237,7 +237,7 @@ class CartController extends Controller
                     ]);
                 } else {
                     session()->forget('coupon');
-                    $thongBaoHuyMa = 'Mã giảm giá đã bị gỡ do tổng đơn không đủ điều kiện!';
+                    //$thongBaoHuyMa = 'Mã giảm giá đã bị gỡ do tổng đơn không đủ điều kiện!';
                 }
             }
             // -------------------------------------
