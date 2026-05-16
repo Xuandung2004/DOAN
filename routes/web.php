@@ -87,8 +87,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/history', [OrderController::class, 'history'])->name('orders.history');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
     Route::put('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+    Route::post('/admin/orders/{id}/force-approve', [OrderController::class, 'forceApproveOrder'])->name('admin.orders.force_approve');
     // Đánh giá sản phẩm
-    Route::post('/reviews', [ReviewController::class, 'store'])->middleware('throttle:3,1')->name('reviews.store');
+    Route::post('/reviews', [ReviewController::class, 'store'])->middleware('throttle:3,10')->name('reviews.store');
     // Chat với Admin
     // API xử lý Chat (Dùng chung cho cả Admin và Khách)
     Route::get('/chat/messages/{userId}', [ChatController::class, 'getMessages']);

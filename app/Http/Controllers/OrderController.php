@@ -78,8 +78,6 @@ class OrderController extends Controller
             }
         } 
         
-        // (Đã xóa đoạn elseif khôi phục đơn từ Hủy để tránh lỗi kho hàng bị âm)
-
         // ==========================================
         // 💾 LƯU TRẠNG THÁI MỚI
         // ==========================================
@@ -103,7 +101,21 @@ class OrderController extends Controller
                       
         return view('admin.orders.showdetail', compact('order'));
     }
+public function forceApproveOrder($id)
+    {
+        $order = Order::findOrFail($id);
 
+        // Chỉ cho phép xử lý nếu đúng là đơn báo lỗi 2
+        if ($order->trangthaithanhtoan == 2) {
+            $order->trangthaithanhtoan = 1; // Chốt: Đã thanh toán
+            $order->trangthaidon = 1;       // Chốt: Đang giao / Đang xử lý
+            $order->save();
+
+            return redirect()->back()->with('success', 'Xử lý ngoại lệ thành công! Đơn hàng đã được cộng vào doanh thu.');
+        }
+
+        return redirect()->back()->with('error', 'Trạng thái đơn hàng không hợp lệ để xử lý!');
+    }
 
     // ==========================================
     // PHẦN DÀNH CHO USER (KHÁCH HÀNG)

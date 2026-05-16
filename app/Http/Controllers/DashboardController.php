@@ -68,7 +68,7 @@ class DashboardController extends Controller
                 case 'tuan':
                     // Xử lý logic lọc theo tuần nếu cần
                    $date = Carbon::now();
-    $date->setISODate($request->nam, $request->tuan); // Set mốc thời gian về Tuần và Năm người dùng nhập
+    $date->setISODate($request->nam, $request->tuan);
     
     $ngayBatDau = $date->copy()->startOfWeek()->format('Y-m-d 00:00:00'); // Thứ 2
     $ngayKetThuc = $date->copy()->endOfWeek()->format('Y-m-d 23:59:59');  // Chủ nhật

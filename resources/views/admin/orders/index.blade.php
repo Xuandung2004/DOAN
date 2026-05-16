@@ -70,9 +70,9 @@
 
                                 <td class="text-center">
                                     <span
-                                        class="badge badge-{{ $order->trangthaithanhtoan == 1 ? 'success' : 'warning text-dark' }} p-2">
+                                        class="badge badge-{{ $order->trangthaithanhtoan == 1 ? 'success' : ($order->trangthaithanhtoan == 2 ? 'danger' : 'warning text-dark') }} p-2">
                                         {{ $order->phuongthucthanhtoan }}<br>
-                                        {{ $order->trangthaithanhtoan == 1 ? 'Đã thanh toán' : 'Chờ thanh toán' }}
+                                        {{ $order->trangthaithanhtoan == 1 ? 'Đã thanh toán' : ($order->trangthaithanhtoan == 2 ? 'Đã TT (Hết hàng)' : 'Chờ thanh toán') }}
                                     </span>
                                 </td>
 
@@ -80,11 +80,12 @@
                                     <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
-                                        <select name="trangthaidon" class="form-control form-control-sm font-weight-bold 
-                                                                    {{ $order->trangthaidon == 0 ? 'text-secondary' : '' }}
-                                                                    {{ $order->trangthaidon == 1 ? 'text-primary' : '' }}
-                                                                    {{ $order->trangthaidon == 2 ? 'text-success' : '' }}
-                                                                    {{ $order->trangthaidon == 3 ? 'text-danger' : '' }}"
+                                        <select name="trangthaidon"
+                                            class="form-control form-control-sm font-weight-bold 
+                                                                                    {{ $order->trangthaidon == 0 ? 'text-secondary' : '' }}
+                                                                                    {{ $order->trangthaidon == 1 ? 'text-primary' : '' }}
+                                                                                    {{ $order->trangthaidon == 2 ? 'text-success' : '' }}
+                                                                                    {{ $order->trangthaidon == 3 ? 'text-danger' : '' }}"
                                             onchange="this.form.submit()">
                                             <option value="0" {{ $order->trangthaidon == 0 ? 'selected' : '' }}>Chờ xử lý</option>
                                             <option value="1" {{ $order->trangthaidon == 1 ? 'selected' : '' }}>Đang giao</option>
@@ -99,6 +100,18 @@
                                         title="Xem chi tiết đơn">
                                         <i class="fas fa-eye"></i> Xem
                                     </a>
+                                    {{-- NÚT XỬ LÝ NGOẠI LỆ (Chỉ hiện khi TT Thanh toán = 2) --}}
+                                    @if ($order->trangthaithanhtoan == 2)
+                                        <form action="{{ route('admin.orders.force_approve', $order->id) }}" method="POST"
+                                            class="d-inline-block">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger btn-sm mb-1"
+                                                title="Khách đồng ý nhận hàng sau - Chuyển thành Đã Thanh Toán"
+                                                onclick="return confirm('Xác nhận: Bạn đã thỏa thuận với khách thành công và muốn ghi nhận doanh thu cho đơn hàng bị thiếu này?')">
+                                                <i class="fas fa-check-double"></i> Xử lý bù hàng
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @empty

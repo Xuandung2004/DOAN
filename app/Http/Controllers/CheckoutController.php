@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 
 class CheckoutController extends Controller
 {
@@ -62,6 +63,21 @@ class CheckoutController extends Controller
      */
     public function placeOrder(Request $request)
     {
+        $userID = Auth::id(); // Lấy ID của khách (hoặc dùng Auth::id() nếu bắt buộc đăng nhập)
+        $rateLimitKey = 'place-order:' . $userID;
+
+    // Kiểm tra xem khách có đang bị khóa không (Tối đa 1 lần thử)
+    if (RateLimiter::tooManyAttempts($rateLimitKey, 1)) {
+        $seconds = RateLimiter::availableIn($rateLimitKey); // Lấy số giây còn lại phải đợi
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Bạn thao tác quá nhanh! Vui lòng đợi ' . $seconds . ' giây rồi thử lại.'
+        ], 429); // Mã 429 là Too Many Requests
+    }
+
+        // Nếu qua ải, ghi nhận lần click này và khóa key trong đúng 10 giây
+        RateLimiter::hit($rateLimitKey, 10);
+
         // 1. Validate dữ liệu cực kỳ chặt chẽ
         $request->validate([
             'tennguoinhan' => 'required|string|max:255',
@@ -88,9 +104,15 @@ class CheckoutController extends Controller
         try {
             $tamTinh = 0;
             foreach ($cart->cartItems as $item) {
+                // Truy vấn trực tiếp DB và khóa dòng sản phẩm này lại
+                // Nếu có 2 người cùng nhấn mua 1 lúc thì người sau sẽ phải đợi 
+                // người trước xử lý xong mới được phép tiếp tục
+                $productLocked = Product::where('id', $item->sanphamID)
+                                                    ->lockForUpdate()
+                                                    ->first();
                 // Kiểm tra số lượng trước khi cho phép đặt hàng
-                if ($item->product->soluong < $item->soluong) {
-                    throw new \Exception('Sản phẩm "' . $item->product->ten . '" không đủ số lượng trong kho!');
+                if (!$productLocked || $productLocked->soluong < $item->soluong) {
+                    throw new \Exception('Sản phẩm "' . ($productLocked->ten ?? $item->product->ten) . '" không đủ số lượng trong kho!');
                 }
                 $tamTinh += ($item->gia * $item->soluong);
             }
@@ -106,6 +128,7 @@ class CheckoutController extends Controller
                                     $q->whereNull('hethan')->orWhere('hethan', '>', now());
                                 })
                                 ->where('dasudung', '<', DB::raw('gioihansudung')) 
+                                ->lockForUpdate()
                                 ->first();
 
                 if ($coupon && $tamTinh >= $coupon->giatridontoithieu) {
@@ -281,6 +304,25 @@ class CheckoutController extends Controller
                 if ($order && $order->trangthaithanhtoan == 0) {
                     DB::beginTransaction();
                     try {
+                        // Khách đã thanh toán nhưng hết hàng
+                        $hetHang = false;
+                    foreach ($order->orderItems as $item) {
+                        $productLocked = Product::where('id', $item->sanphamID)->lockForUpdate()->first();
+                        if (!$productLocked || $productLocked->soluong < $item->soluong) {
+                            $hetHang = true;
+                            break;
+                        }
+                    }
+                    if ($hetHang) {
+                        $order->trangthaithanhtoan = 2; // Đã thanh toán nhưng HẾT HÀNG
+                        $order->save();
+                        DB::commit();
+
+                        return view('pages.vnpay_return', [
+                            'status' => 'warning',
+                            'message' => 'Bạn đã thanh toán thành công, nhưng sản phẩm vừa hết hàng...'
+                        ]);
+                    }
                         // 1. Đánh dấu đã thanh toán
                         $order->trangthaithanhtoan = 1; 
                         $order->save();
