@@ -167,6 +167,14 @@ class CheckoutController extends Controller
 
             // 4. CHIA NHÁNH THANH TOÁN
             if ($request->phuongthucthanhtoan === 'VNPAY') {
+                if ($tongThanhToan <= 0) {
+                 // Chặn không cho qua VNPay
+                DB::rollBack();
+                 return response()->json([
+                 'status' => 'error',
+                 'message' => 'Đơn hàng 0đ không thể thanh toán qua VNPay. Vui lòng chọn COD!'
+                 ], 400);
+                }
                 // Với VNPay, ta chỉ lưu tạm đơn hàng, KHÔNG TRỪ KHO, KHÔNG CẬP NHẬT MÃ GIẢM GIÁ
                 DB::commit(); 
 
@@ -301,9 +309,13 @@ class CheckoutController extends Controller
             if ($_GET['vnp_ResponseCode'] == '00') {
                 
                 // Nếu đơn hàng hợp lệ và chưa được thanh toán trước đó
-                if ($order && $order->trangthaithanhtoan == 0) {
+                // if ($order && $order->trangthaithanhtoan == 0) {
                     DB::beginTransaction();
                     try {
+                        // Khóa đơn hàng để tránh tình trạng 2 hoặc nhiều luồng cùng xử lý một đơn hàng
+                        $order = Order::where('id', $orderId)->lockForUpdate()->first();
+                        // Nếu đơn hàng hợp lệ và chưa được thanh toán trước đó
+                        if ($order && $order->trangthaithanhtoan == 0) {
                         // Khách đã thanh toán nhưng hết hàng
                         $hetHang = false;
                     foreach ($order->orderItems as $item) {
@@ -345,6 +357,9 @@ class CheckoutController extends Controller
                         session()->forget('coupon');
 
                         DB::commit();
+                        } else {
+                            DB::rollBack();
+                        }
                     } catch (\Exception $e) {
                         DB::rollBack();
                         Log::error('Lỗi khi xử lý thành công VNPay: ' . $e->getMessage());
@@ -353,8 +368,7 @@ class CheckoutController extends Controller
                             'message' => 'Lỗi hệ thống khi cập nhật đơn hàng!'
                         ]);
                     }
-                }
-
+                // }
                 // Trả về giao diện Thành công
                 return view('pages.vnpay_return', [
                     'status' => 'success', 
